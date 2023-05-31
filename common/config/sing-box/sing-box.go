@@ -17,7 +17,7 @@ var (
 
 func ReadAndWriteConfig() option.Options {
 	premiumList := db.GetPremiumList()
-	body, err := os.ReadFile("./config.json")
+	body, err := os.ReadFile("~/config.json")
 	if err != nil {
 		panic(err)
 	}
@@ -86,7 +86,7 @@ func ReadAndWriteConfig() option.Options {
 	options.Inbounds = inbounds
 
 	// Write new config
-	f, err := os.Create("./config.json")
+	f, err := os.Create("~/config.json")
 	if err != nil {
 		panic(err)
 	}

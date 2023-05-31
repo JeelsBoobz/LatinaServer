@@ -45,7 +45,7 @@ func GenerateReverseProxy(config option.Options) {
 	result = append(result, "}")
 
 	// Write nginx config
-	f, err := os.Create("./stream.conf")
+	f, err := os.Create("~/stream.conf")
 	if err != nil {
 		panic(err)
 	}
