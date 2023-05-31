@@ -6,6 +6,7 @@ ExecStart=/usr/local/bin/latinaserver
 Restart=on-failure
 RestartSec=10s
 LimitNOFILE=infinity
+Environment="DB_URL=postgress://username:password@hostname:port/database"
 
 [Install]
 WantedBy=multi-user.target
