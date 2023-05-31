@@ -1,0 +1,11 @@
+[Unit]
+Description=latinaserver service
+
+[Service]
+ExecStart=/usr/local/bin/latinaserver
+Restart=on-failure
+RestartSec=10s
+LimitNOFILE=infinity
+
+[Install]
+WantedBy=multi-user.target
