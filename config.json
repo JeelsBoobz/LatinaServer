@@ -1,0 +1,83 @@
+{
+  "log": {
+    "level": "info"
+  },
+  "inbounds": [
+    {
+      "type": "trojan",
+      "tag": "trojan-ws-in",
+      "listen": "127.0.0.1",
+      "listen_port": 52000,
+      "tcp_fast_open": true,
+      "udp_fragment": true,
+      "udp_timeout": 300,
+      "proxy_protocol": true,
+      "tls": {
+        "enabled": true,
+        "server_name": "trojan-ws-in.",
+        "alpn": "http/1.1",
+        "min_version": "1.2",
+        "max_version": "1.3",
+        "certificate_path": "/etc/certs/cert.pem",
+        "key_path": "/etc/certs/key.pem"
+      },
+      "transport": {
+        "type": "ws",
+        "path": "/sing",
+        "early_data_header_name": "Sec-WebSocket-Protocol"
+      }
+    },
+    {
+      "type": "vmess",
+      "tag": "vmess-ws-in",
+      "listen": "127.0.0.1",
+      "listen_port": 52001,
+      "tcp_fast_open": true,
+      "udp_fragment": true,
+      "proxy_protocol": true,
+      "tls": {
+        "enabled": true,
+        "server_name": "vmess-ws-in.",
+        "alpn": "http/1.1",
+        "min_version": "1.2",
+        "max_version": "1.3",
+        "certificate_path": "/etc/certs/cert.pem",
+        "key_path": "/etc/certs/key.pem"
+      },
+      "transport": {
+        "type": "ws",
+        "path": "/sing",
+        "early_data_header_name": "Sec-WebSocket-Protocol"
+      }
+    },
+    {
+      "type": "vless",
+      "tag": "vless-ws-in",
+      "listen": "127.0.0.1",
+      "listen_port": 52002,
+      "tcp_fast_open": true,
+      "udp_fragment": true,
+      "proxy_protocol": true,
+      "tls": {
+        "enabled": true,
+        "server_name": "vless-ws-in.",
+        "alpn": "http/1.1",
+        "min_version": "1.2",
+        "max_version": "1.3",
+        "certificate_path": "/etc/certs/cert.pem",
+        "key_path": "/etc/certs/key.pem"
+      },
+      "transport": {
+        "type": "ws",
+        "path": "/sing",
+        "early_data_header_name": "Sec-WebSocket-Protocol"
+      }
+    }
+  ],
+  "outbounds": [
+    {
+      "type": "direct",
+      "tag": "direct"
+    }
+  ]
+}
