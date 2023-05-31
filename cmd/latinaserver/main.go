@@ -40,13 +40,17 @@ func reloadSingBox() {
 	}
 }
 
+func HotReload() {
+	config.ReadAndWriteConfig()
+	reloadSingBox()
+}
+
 func main() {
 	fmt.Println("Service started !")
 	s := gocron.NewScheduler(loc)
-	s.Every(1).Day().At("13:44").Do(func() {
-		config.ReadAndWriteConfig()
-		reloadSingBox()
-	})
 
+	s.Every(1).Day().At("00:00").Tag("hot-reload").Do(HotReload)
+
+	HotReload()
 	s.StartBlocking()
 }
