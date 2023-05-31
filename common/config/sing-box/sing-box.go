@@ -68,7 +68,7 @@ func ReadAndWriteConfig() option.Options {
 			inbound.VLESSOptions.ListenPort = uint16(port)
 			inbound.VLESSOptions.Users = []option.VLESSUser{}
 
-			for _, user := range premiumList[C.TypeVMess] {
+			for _, user := range premiumList[C.TypeVLESS] {
 				inbound.VLESSOptions.Users = append(inbound.VLESSOptions.Users, option.VLESSUser{
 					Name: user.Name,
 					UUID: user.Password,
