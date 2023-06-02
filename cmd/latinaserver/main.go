@@ -7,12 +7,13 @@ import (
 	"github.com/LalatinaHub/LatinaServer/common/config"
 	"github.com/LalatinaHub/LatinaServer/common/helper"
 	"github.com/LalatinaHub/LatinaServer/common/web"
+	CS "github.com/LalatinaHub/LatinaServer/constant"
 	"github.com/go-co-op/gocron"
 )
 
 var (
 	loc, _   = time.LoadLocation("Asia/Jakarta")
-	services = []string{"sing-box", "openresty"}
+	services = []string{CS.ServiceSingBox, CS.ServiceOpenresty}
 )
 
 func HotReload() {
