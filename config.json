@@ -20,13 +20,12 @@
       "udp_fragment": true,
       "transport": {
         "type": "ws",
-        "path": "/trojan",
-        "early_data_header_name": "Sec-WebSocket-Protocol"
+        "path": "/trojan"
       }
     },
     {
       "type": "vmess",
-      "tag": "vmess-ws",
+      "tag": "vmess",
       "listen": "127.0.0.1",
       "listen_port": 52002,
       "tcp_fast_open": true,
@@ -41,13 +40,12 @@
       "udp_fragment": true,
       "transport": {
         "type": "ws",
-        "path": "/vmess",
-        "early_data_header_name": "Sec-WebSocket-Protocol"
+        "path": "/vmess"
       }
     },
     {
       "type": "vless",
-      "tag": "vless-ws",
+      "tag": "vless",
       "listen": "127.0.0.1",
       "listen_port": 52004,
       "tcp_fast_open": true,
@@ -62,8 +60,7 @@
       "udp_fragment": true,
       "transport": {
         "type": "ws",
-        "path": "/vless",
-        "early_data_header_name": "Sec-WebSocket-Protocol"
+        "path": "/vless"
       }
     }
   ],

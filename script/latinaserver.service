@@ -8,6 +8,8 @@ RestartSec=10s
 LimitNOFILE=infinity
 Environment="DB_URL=postgress://username:password@hostname:port/database"
 Environment="PASSWORD=SOMESECUREPASSWORD"
+Environment="DOMAIN=SOMECOOLDOMAIN"
+Environment="GIN_MODE=release"
 
 [Install]
 WantedBy=multi-user.target
