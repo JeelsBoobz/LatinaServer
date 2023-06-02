@@ -2,21 +2,14 @@ package config
 
 import (
 	"encoding/json"
-	"fmt"
 	"os"
 
-	"github.com/LalatinaHub/LatinaServer/common/config/nginx"
 	"github.com/LalatinaHub/LatinaServer/common/db"
 	C "github.com/sagernet/sing-box/constant"
 	"github.com/sagernet/sing-box/option"
 )
 
-var (
-	domain = os.Getenv("DOMAIN")
-)
-
-func ReadAndWriteConfig() option.Options {
-	premiumList := db.GetPremiumList()
+func ReadSingConfig() option.Options {
 	body, err := os.ReadFile("/usr/local/etc/latinaserver/config.json")
 	if err != nil {
 		panic(err)
@@ -28,11 +21,17 @@ func ReadAndWriteConfig() option.Options {
 		panic(err)
 	}
 
+	return options
+}
+
+func WriteSingConfig() option.Options {
+	premiumList := db.GetPremiumList()
+	options := ReadSingConfig()
+
 	var inbounds []option.Inbound
 	for i, inbound := range options.Inbounds {
 		var (
-			port       = 52000 + i
-			serverName = fmt.Sprintf("%s.%s", inbound.Tag, domain)
+			port = 52000 + i
 		)
 
 		switch inbound.Type {
@@ -47,8 +46,13 @@ func ReadAndWriteConfig() option.Options {
 				})
 			}
 
-			if inbound.TrojanOptions.TLS != nil {
-				inbound.TrojanOptions.TLS.ServerName = serverName
+			if inbound.TrojanOptions.Transport != nil {
+				switch inbound.TrojanOptions.Transport.Type {
+				case C.V2RayTransportTypeWebsocket:
+					inbound.TrojanOptions.Transport.WebsocketOptions.Path = "/" + inbound.Type
+				case C.V2RayTransportTypeGRPC:
+					inbound.TrojanOptions.Transport.GRPCOptions.ServiceName = inbound.Type
+				}
 			}
 		case C.TypeVMess:
 			inbound.VMessOptions.ListenPort = uint16(port)
@@ -61,8 +65,13 @@ func ReadAndWriteConfig() option.Options {
 				})
 			}
 
-			if inbound.VMessOptions.TLS != nil {
-				inbound.VMessOptions.TLS.ServerName = serverName
+			if inbound.VMessOptions.Transport != nil {
+				switch inbound.VMessOptions.Transport.Type {
+				case C.V2RayTransportTypeWebsocket:
+					inbound.VMessOptions.Transport.WebsocketOptions.Path = "/" + inbound.Type
+				case C.V2RayTransportTypeGRPC:
+					inbound.VMessOptions.Transport.GRPCOptions.ServiceName = inbound.Type
+				}
 			}
 		case C.TypeVLESS:
 			inbound.VLESSOptions.ListenPort = uint16(port)
@@ -75,8 +84,13 @@ func ReadAndWriteConfig() option.Options {
 				})
 			}
 
-			if inbound.VLESSOptions.TLS != nil {
-				inbound.VLESSOptions.TLS.ServerName = serverName
+			if inbound.VLESSOptions.Transport != nil {
+				switch inbound.VLESSOptions.Transport.Type {
+				case C.V2RayTransportTypeWebsocket:
+					inbound.VLESSOptions.Transport.WebsocketOptions.Path = "/" + inbound.Type
+				case C.V2RayTransportTypeGRPC:
+					inbound.VLESSOptions.Transport.GRPCOptions.ServiceName = inbound.Type
+				}
 			}
 		}
 
@@ -97,9 +111,6 @@ func ReadAndWriteConfig() option.Options {
 		panic(err)
 	}
 	f.WriteString(string(b))
-
-	// Generate nginx configuration
-	nginx.GenerateReverseProxy(options)
 
 	return options
 }
