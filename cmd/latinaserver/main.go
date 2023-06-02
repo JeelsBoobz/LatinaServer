@@ -6,6 +6,7 @@ import (
 
 	"github.com/LalatinaHub/LatinaServer/common/config"
 	"github.com/LalatinaHub/LatinaServer/common/helper"
+	"github.com/LalatinaHub/LatinaServer/common/web"
 	"github.com/go-co-op/gocron"
 )
 
@@ -26,5 +27,7 @@ func main() {
 	s.Every(1).Day().At("00:00").Tag("hot-reload").Do(HotReload)
 
 	HotReload()
-	s.StartBlocking()
+	s.StartAsync()
+
+	web.StartWebService()
 }
