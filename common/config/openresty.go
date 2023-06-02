@@ -10,7 +10,7 @@ import (
 
 func WriteReverseConfig() {
 	config := ReadSingConfig()
-	r, err := os.ReadFile("./resources/openresty/stream/reverse.conf")
+	r, err := os.ReadFile("/usr/local/etc/latinaserver/reverse_default.conf")
 	if err != nil {
 		panic(err)
 	}
@@ -32,7 +32,7 @@ func WriteReverseConfig() {
 		}
 	}
 
-	f, err := os.Create("./reverse.conf")
+	f, err := os.Create("/usr/local/etc/latinaserver/reverse.conf")
 	if err != nil {
 		panic(err)
 	}
