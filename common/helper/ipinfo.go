@@ -2,20 +2,21 @@ package helper
 
 import (
 	"crypto/tls"
-	"encoding/json"
 	"io"
 	"log"
 	"net"
 	"net/http"
 	"strings"
 	"time"
+
+	"github.com/LalatinaHub/LatinaSub-go/ipapi"
 )
 
 var (
-	Ipapi json.RawMessage
+	ipinfo ipapi.Ipapi
 )
 
-func GetIpInfo() json.RawMessage {
+func GetIpInfo() ipapi.Ipapi {
 	var (
 		buf = new(strings.Builder)
 	)
@@ -30,17 +31,17 @@ func GetIpInfo() json.RawMessage {
 
 	resp, err := httpClient.Get("http://ipinfo.io/json")
 	if err != nil {
-		return Ipapi
+		return ipinfo
 	}
 	defer resp.Body.Close()
 
 	io.Copy(buf, resp.Body)
 	if resp.StatusCode == 200 {
-		json.Unmarshal([]byte(buf.String()), &Ipapi)
-		return Ipapi
+		ipinfo = ipapi.Parse(buf.String())
+		return ipinfo
 	}
 
-	return Ipapi
+	return ipinfo
 }
 
 func GetOutboundIP() string {
