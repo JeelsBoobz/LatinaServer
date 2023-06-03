@@ -12,13 +12,12 @@ import (
 )
 
 var (
-	loc, _   = time.LoadLocation("Asia/Jakarta")
-	services = []string{CS.ServiceSingBox, CS.ServiceOpenresty}
+	loc, _ = time.LoadLocation("Asia/Jakarta")
 )
 
 func HotReload() {
 	config.Write()
-	helper.ReloadService(services...)
+	helper.ReloadService([]string{CS.ServiceSingBox, CS.ServiceOpenresty}...)
 }
 
 func main() {

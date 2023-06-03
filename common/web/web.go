@@ -4,6 +4,7 @@ import (
 	"net/http"
 	"os"
 
+	"github.com/LalatinaHub/LatinaServer/common/config"
 	"github.com/LalatinaHub/LatinaServer/common/helper"
 	CS "github.com/LalatinaHub/LatinaServer/constant"
 	"github.com/gin-contrib/static"
@@ -23,6 +24,7 @@ func WebServer() http.Handler {
 	}
 
 	r.GET("/"+password, func(c *gin.Context) {
+		config.Write()
 		helper.ReloadService([]string{CS.ServiceSingBox, CS.ServiceOpenresty}...)
 		c.Status(http.StatusOK)
 	})
