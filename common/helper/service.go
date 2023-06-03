@@ -15,5 +15,7 @@ func ReloadService(names ...string) {
 		} else if err != nil {
 			panic(err)
 		}
+
+		fmt.Println(name, "successfully reloaded !")
 	}
 }
