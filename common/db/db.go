@@ -17,7 +17,7 @@ type PremiumList struct {
 func GetPremiumList() map[string][]PremiumList {
 	var (
 		premiumList               = map[string][]PremiumList{}
-		query                     = "SELECT * FROM premium;"
+		query                     = "SELECT premium.* FROM premium JOIN public.users ON premium.id = public.users.id WHERE (SELECT EXTRACT(DAY FROM NOW() - (SELECT EXPIRED FROM public.users WHERE public.users.id = premium.id))) < 1"
 		name                      sql.NullInt64
 		password, vpnType, domain sql.NullString
 	)
