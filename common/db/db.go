@@ -1,46 +1,33 @@
 package db
 
 import (
-	"database/sql"
-	"strconv"
+	"os"
 
-	"github.com/LalatinaHub/LatinaSub-go/db"
+	"github.com/nedpals/supabase-go"
 )
 
 type PremiumList struct {
-	Name     string `json:"name"`
+	Id       int64  `json:"id"`
 	Password string `json:"password"`
 	Type     string `json:"type"`
 	Domain   string `json:"domain"`
 }
 
+func connect() *supabase.Client {
+	return supabase.CreateClient(os.Getenv("SUPABASE_URL"), os.Getenv("SUPABASE_KEY"))
+}
+
 func GetPremiumList() map[string][]PremiumList {
 	var (
-		premiumList               = map[string][]PremiumList{}
-		query                     = "SELECT premium.* FROM premium JOIN public.users ON premium.id = public.users.id WHERE (SELECT EXTRACT(DAY FROM NOW() - (SELECT EXPIRED FROM public.users WHERE public.users.id = premium.id))) < 1"
-		name                      sql.NullInt64
-		password, vpnType, domain sql.NullString
+		premiumList = map[string][]PremiumList{}
+		rows        = []PremiumList{}
 	)
 
-	rows, err := db.New().Conn().Query(query)
-	if err != nil {
+	if err := connect().DB.From("premium").Select("*").Execute(&rows); err != nil {
 		panic(err)
 	}
-	defer rows.Close()
 
-	for rows.Next() {
-		err := rows.Scan(&name, &password, &vpnType, &domain)
-		if err != nil {
-			panic(err)
-		}
-
-		premium := PremiumList{
-			Name:     strconv.Itoa(int(name.Int64)),
-			Password: password.String,
-			Type:     vpnType.String,
-			Domain:   domain.String,
-		}
-
+	for _, premium := range rows {
 		premiumList[premium.Type] = append(premiumList[premium.Type], premium)
 	}
 

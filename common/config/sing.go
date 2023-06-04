@@ -3,6 +3,7 @@ package config
 import (
 	"encoding/json"
 	"os"
+	"strconv"
 
 	"github.com/LalatinaHub/LatinaServer/common/db"
 	C "github.com/sagernet/sing-box/constant"
@@ -34,16 +35,14 @@ func WriteSingConfig() option.Options {
 			port = 52000 + i
 		)
 
-		options.Experimental.V2RayAPI.Stats.Inbounds = append(options.Experimental.V2RayAPI.Stats.Inbounds, inbound.Tag)
 		switch inbound.Type {
 		case C.TypeTrojan:
 			inbound.TrojanOptions.ListenPort = uint16(port)
 			inbound.TrojanOptions.Users = []option.TrojanUser{}
 
 			for _, user := range premiumList[C.TypeTrojan] {
-				options.Experimental.V2RayAPI.Stats.Users = append(options.Experimental.V2RayAPI.Stats.Users, user.Name)
 				inbound.TrojanOptions.Users = append(inbound.TrojanOptions.Users, option.TrojanUser{
-					Name:     user.Name,
+					Name:     strconv.Itoa(int(user.Id)),
 					Password: user.Password,
 				})
 			}
@@ -61,9 +60,8 @@ func WriteSingConfig() option.Options {
 			inbound.VMessOptions.Users = []option.VMessUser{}
 
 			for _, user := range premiumList[C.TypeVMess] {
-				options.Experimental.V2RayAPI.Stats.Users = append(options.Experimental.V2RayAPI.Stats.Users, user.Name)
 				inbound.VMessOptions.Users = append(inbound.VMessOptions.Users, option.VMessUser{
-					Name: user.Name,
+					Name: strconv.Itoa(int(user.Id)),
 					UUID: user.Password,
 				})
 			}
@@ -81,9 +79,8 @@ func WriteSingConfig() option.Options {
 			inbound.VLESSOptions.Users = []option.VLESSUser{}
 
 			for _, user := range premiumList[C.TypeVLESS] {
-				options.Experimental.V2RayAPI.Stats.Users = append(options.Experimental.V2RayAPI.Stats.Users, user.Name)
 				inbound.VLESSOptions.Users = append(inbound.VLESSOptions.Users, option.VLESSUser{
-					Name: user.Name,
+					Name: strconv.Itoa(int(user.Id)),
 					UUID: user.Password,
 				})
 			}
@@ -99,6 +96,13 @@ func WriteSingConfig() option.Options {
 		}
 
 		inbounds = append(inbounds, inbound)
+		options.Experimental.V2RayAPI.Stats.Inbounds = append(options.Experimental.V2RayAPI.Stats.Inbounds, inbound.Tag)
+	}
+
+	for _, list := range premiumList {
+		for _, user := range list {
+			options.Experimental.V2RayAPI.Stats.Users = append(options.Experimental.V2RayAPI.Stats.Users, strconv.Itoa(int(user.Id)))
+		}
 	}
 
 	options.Inbounds = inbounds

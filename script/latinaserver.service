@@ -6,8 +6,9 @@ ExecStart=/usr/local/bin/latinaserver
 Restart=on-failure
 RestartSec=10s
 LimitNOFILE=infinity
-Environment="DB_URL=postgress://username:password@hostname:port/database"
-Environment="PASSWORD=SOMESECUREPASSWORD"
+Environment="SUPABASE_URL=https://project_ref.supabase.co"
+Environment="SUPABASE_KEY=SERVICEROLEKEY"
+Environment="PASSWORD=SECUREPASSWORD"
 Environment="DOMAIN=SOMECOOLDOMAIN"
 Environment="GIN_MODE=release"
 
