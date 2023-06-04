@@ -34,12 +34,14 @@ func WriteSingConfig() option.Options {
 			port = 52000 + i
 		)
 
+		options.Experimental.V2RayAPI.Stats.Inbounds = append(options.Experimental.V2RayAPI.Stats.Inbounds, inbound.Tag)
 		switch inbound.Type {
 		case C.TypeTrojan:
 			inbound.TrojanOptions.ListenPort = uint16(port)
 			inbound.TrojanOptions.Users = []option.TrojanUser{}
 
 			for _, user := range premiumList[C.TypeTrojan] {
+				options.Experimental.V2RayAPI.Stats.Users = append(options.Experimental.V2RayAPI.Stats.Users, user.Name)
 				inbound.TrojanOptions.Users = append(inbound.TrojanOptions.Users, option.TrojanUser{
 					Name:     user.Name,
 					Password: user.Password,
@@ -59,6 +61,7 @@ func WriteSingConfig() option.Options {
 			inbound.VMessOptions.Users = []option.VMessUser{}
 
 			for _, user := range premiumList[C.TypeVMess] {
+				options.Experimental.V2RayAPI.Stats.Users = append(options.Experimental.V2RayAPI.Stats.Users, user.Name)
 				inbound.VMessOptions.Users = append(inbound.VMessOptions.Users, option.VMessUser{
 					Name: user.Name,
 					UUID: user.Password,
@@ -78,6 +81,7 @@ func WriteSingConfig() option.Options {
 			inbound.VLESSOptions.Users = []option.VLESSUser{}
 
 			for _, user := range premiumList[C.TypeVLESS] {
+				options.Experimental.V2RayAPI.Stats.Users = append(options.Experimental.V2RayAPI.Stats.Users, user.Name)
 				inbound.VLESSOptions.Users = append(inbound.VLESSOptions.Users, option.VLESSUser{
 					Name: user.Name,
 					UUID: user.Password,
