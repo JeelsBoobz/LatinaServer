@@ -22,8 +22,15 @@ func HotReload() {
 }
 
 func UpdateUsersQuota() {
+	var isAnyExceed bool = false
 	for _, user := range config.ReadSingConfig().Experimental.V2RayAPI.Stats.Users {
-		db.UpdatePremiumQuota(user)
+		if !db.UpdatePremiumQuota(user) {
+			isAnyExceed = true
+		}
+	}
+
+	if isAnyExceed {
+		HotReload()
 	}
 }
 

@@ -41,11 +41,11 @@ func GetPremiumList() map[string][]PremiumList {
 	return premiumList
 }
 
-func UpdatePremiumQuota(name string) {
+func UpdatePremiumQuota(name string) bool {
 	rows := []PremiumList{}
 	if err := connect().DB.From("premium").Select("*").Eq("id", name).Execute(&rows); err != nil {
 		fmt.Println(err)
-		return
+		return true
 	}
 
 	row := rows[0]
@@ -53,4 +53,9 @@ func UpdatePremiumQuota(name string) {
 	if err := connect().DB.From("premium").Update(row).Eq("id", name).Execute(&rows); err != nil {
 		fmt.Println(err)
 	}
+
+	if row.Quota > 0 {
+		return true
+	}
+	return false
 }
