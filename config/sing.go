@@ -5,7 +5,7 @@ import (
 	"os"
 	"strconv"
 
-	"github.com/LalatinaHub/LatinaServer/common/db"
+	"github.com/LalatinaHub/LatinaServer/db"
 	C "github.com/sagernet/sing-box/constant"
 	"github.com/sagernet/sing-box/option"
 )

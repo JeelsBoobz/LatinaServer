@@ -6,7 +6,7 @@ import (
 	"net/http/httputil"
 	"net/url"
 
-	"github.com/LalatinaHub/LatinaServer/common/config"
+	"github.com/LalatinaHub/LatinaServer/config"
 	"github.com/gin-gonic/gin"
 	C "github.com/sagernet/sing-box/constant"
 )

@@ -4,9 +4,9 @@ import (
 	"net/http"
 	"os"
 
-	"github.com/LalatinaHub/LatinaServer/common/config"
-	"github.com/LalatinaHub/LatinaServer/common/helper"
+	"github.com/LalatinaHub/LatinaServer/config"
 	CS "github.com/LalatinaHub/LatinaServer/constant"
+	"github.com/LalatinaHub/LatinaServer/helper"
 	"github.com/gin-contrib/static"
 	"github.com/gin-gonic/gin"
 )

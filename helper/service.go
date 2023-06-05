@@ -16,7 +16,7 @@ func ReloadService(names ...string) {
 			"inactive.",
 		}
 		if m, _ := regexp.MatchString(regexp.MustCompile(strings.Join(ignoredText[:], "|")).String(), string(out)); m {
-			exec.Command("systemctl", "restart", name)
+			exec.Command("systemctl", "start", name)
 		} else if err != nil {
 			panic(err)
 		}
