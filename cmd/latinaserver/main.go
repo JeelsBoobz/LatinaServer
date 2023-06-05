@@ -32,7 +32,7 @@ func main() {
 	s := gocron.NewScheduler(loc)
 
 	s.Every(1).Day().At("00:00").Tag("hot-reload").Do(HotReload)
-	s.Every(5).Minutes().Tag("update-quota").Do(UpdateUsersQuota)
+	s.Every(1).Minutes().Tag("update-quota").Do(UpdateUsersQuota)
 
 	HotReload()
 	s.StartAsync()

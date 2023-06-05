@@ -1,13 +1,13 @@
 package db
 
 import (
+	"fmt"
 	"os"
 
 	"github.com/LalatinaHub/LatinaServer/helper"
 	"github.com/nedpals/supabase-go"
 )
 
-var PendingUpdateQuotas = map[string]int64{}
 var domain = os.Getenv("DOMAIN")
 
 type PremiumList struct {
@@ -33,7 +33,7 @@ func GetPremiumList() map[string][]PremiumList {
 	}
 
 	for _, premium := range rows {
-		if premium.Domain == domain {
+		if premium.Domain == domain && premium.Quota > 0 {
 			premiumList[premium.Type] = append(premiumList[premium.Type], premium)
 		}
 	}
@@ -42,17 +42,15 @@ func GetPremiumList() map[string][]PremiumList {
 }
 
 func UpdatePremiumQuota(name string) {
-	var (
-		curUsage = PendingUpdateQuotas[name] + helper.GetUserStats(name)/1000000 // In MB
-	)
+	rows := []PremiumList{}
+	if err := connect().DB.From("premium").Select("*").Eq("id", name).Execute(&rows); err != nil {
+		fmt.Println(err)
+		return
+	}
 
-	row := PremiumList{}
-
-	if err := connect().DB.From("premium").Update(PremiumList{
-		Quota: curUsage,
-	}).Eq("id", name).Execute(&row); err != nil {
-		PendingUpdateQuotas[name] = curUsage
-	} else {
-		PendingUpdateQuotas[name] = 0
+	row := rows[0]
+	row.Quota = row.Quota - (helper.GetUserStats(name) / 1000000)
+	if err := connect().DB.From("premium").Update(row).Eq("id", name).Execute(&row); err != nil {
+		fmt.Println(err)
 	}
 }

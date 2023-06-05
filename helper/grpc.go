@@ -2,16 +2,15 @@ package helper
 
 import (
 	"context"
-	"crypto/tls"
 	"fmt"
 
+	CS "github.com/LalatinaHub/LatinaServer/constant"
 	"github.com/v2fly/v2ray-core/v5/app/stats/command"
 	"google.golang.org/grpc"
-	"google.golang.org/grpc/credentials"
 )
 
 func connect() command.StatsServiceClient {
-	conn, err := grpc.Dial("127.0.0.1:5555", grpc.WithTransportCredentials(credentials.NewTLS(&tls.Config{InsecureSkipVerify: true})), grpc.WithBlock())
+	conn, err := grpc.Dial(CS.V2rayAPIAddress, grpc.WithInsecure(), grpc.WithBlock())
 	if err != nil {
 		panic(err)
 	}
@@ -25,6 +24,10 @@ func GetUserStats(name string) int64 {
 	})
 	if err != nil {
 		fmt.Println(err)
+	}
+
+	if resp == nil {
+		return 0
 	}
 
 	return resp.Stat.Value
