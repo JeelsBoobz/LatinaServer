@@ -7,7 +7,7 @@ import (
 	"github.com/LalatinaHub/LatinaServer/config"
 	CS "github.com/LalatinaHub/LatinaServer/constant"
 	"github.com/LalatinaHub/LatinaServer/helper"
-	"github.com/gin-contrib/static"
+	"github.com/arl/statsviz"
 	"github.com/gin-gonic/gin"
 )
 
@@ -23,17 +23,20 @@ func WebServer() http.Handler {
 		password = "reload"
 	}
 
-	r.GET("/"+password, func(c *gin.Context) {
-		config.Write()
-		helper.ReloadService([]string{CS.ServiceSingBox, CS.ServiceOpenresty}...)
-		c.Status(http.StatusOK)
+	r.GET("/*filepath", func(c *gin.Context) {
+		switch c.Param("filepath") {
+		case "/ws":
+			statsviz.Ws(c.Writer, c.Request)
+		case "/" + password:
+			config.Write()
+			helper.ReloadService([]string{CS.ServiceSingBox, CS.ServiceOpenresty}...)
+			c.Status(http.StatusOK)
+		case "/info":
+			c.JSON(http.StatusOK, helper.GetIpInfo())
+		default:
+			statsviz.IndexAtRoot("/").ServeHTTP(c.Writer, c.Request)
+		}
 	})
-
-	r.GET("/info", func(c *gin.Context) {
-		c.JSON(http.StatusOK, helper.GetIpInfo())
-	})
-
-	r.Use(static.Serve("/", static.LocalFile("/usr/local/openresty/nginx/html", false)))
 
 	return r
 }
