@@ -4,6 +4,7 @@ import (
 	"net/http"
 	"time"
 
+	CS "github.com/LalatinaHub/LatinaServer/constant"
 	"golang.org/x/sync/errgroup"
 )
 
@@ -13,14 +14,14 @@ var (
 
 func StartWebService() {
 	web := &http.Server{
-		Addr:         ":50000",
+		Addr:         CS.WebServerAddress,
 		Handler:      WebServer(),
 		ReadTimeout:  5 * time.Second,
 		WriteTimeout: 10 * time.Second,
 	}
 
 	reverseProxy := &http.Server{
-		Addr:         ":50001",
+		Addr:         CS.ReverseProxyAddress,
 		Handler:      ReverseProxy(),
 		ReadTimeout:  5 * time.Second,
 		WriteTimeout: 10 * time.Second,

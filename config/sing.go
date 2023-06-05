@@ -5,6 +5,7 @@ import (
 	"os"
 	"strconv"
 
+	CS "github.com/LalatinaHub/LatinaServer/constant"
 	"github.com/LalatinaHub/LatinaServer/db"
 	C "github.com/sagernet/sing-box/constant"
 	"github.com/sagernet/sing-box/option"
@@ -28,6 +29,17 @@ func ReadSingConfig() option.Options {
 func WriteSingConfig() option.Options {
 	premiumList := db.GetPremiumList()
 	options := ReadSingConfig()
+	options.Experimental = &option.ExperimentalOptions{
+		V2RayAPI: &option.V2RayAPIOptions{
+			Listen: CS.V2rayAPIAddress,
+			Stats: &option.V2RayStatsServiceOptions{
+				Enabled:   true,
+				Inbounds:  []string{},
+				Outbounds: []string{"direct"},
+				Users:     []string{},
+			},
+		},
+	}
 
 	var inbounds []option.Inbound
 	for i, inbound := range options.Inbounds {
