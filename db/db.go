@@ -50,7 +50,7 @@ func UpdatePremiumQuota(name string) {
 
 	row := rows[0]
 	row.Quota = row.Quota - (helper.GetUserStats(name) / 1000000)
-	if err := connect().DB.From("premium").Update(row).Eq("id", name).Execute(&row); err != nil {
+	if err := connect().DB.From("premium").Update(row).Eq("id", name).Execute(&rows); err != nil {
 		fmt.Println(err)
 	}
 }
