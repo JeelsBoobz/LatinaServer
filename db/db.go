@@ -8,6 +8,7 @@ import (
 )
 
 var PendingUpdateQuotas = map[string]int64{}
+var domain = os.Getenv("DOMAIN")
 
 type PremiumList struct {
 	Id       int64  `json:"id"`
@@ -27,12 +28,14 @@ func GetPremiumList() map[string][]PremiumList {
 		rows        = []PremiumList{}
 	)
 
-	if err := connect().DB.From("premium").Select("*").Eq("domain", os.Getenv("DOMAIN")).Execute(&rows); err != nil {
+	if err := connect().DB.From("premium").Select("*").Execute(&rows); err != nil {
 		panic(err)
 	}
 
 	for _, premium := range rows {
-		premiumList[premium.Type] = append(premiumList[premium.Type], premium)
+		if premium.Domain == domain {
+			premiumList[premium.Type] = append(premiumList[premium.Type], premium)
+		}
 	}
 
 	return premiumList
