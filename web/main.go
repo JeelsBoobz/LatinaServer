@@ -5,6 +5,7 @@ import (
 	"time"
 
 	CS "github.com/LalatinaHub/LatinaServer/constant"
+	splitter "github.com/LalatinaHub/tls-splitter"
 	"golang.org/x/sync/errgroup"
 )
 
@@ -33,6 +34,9 @@ func StartWebService() {
 	g.Go(func() error {
 		return reverseProxy.ListenAndServe()
 	})
+
+	// Run tls splitter
+	go splitter.Run(ReadSplitterConfig())
 
 	if err := g.Wait(); err != nil {
 		panic(err)
