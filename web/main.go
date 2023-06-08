@@ -5,7 +5,7 @@ import (
 	"time"
 
 	CS "github.com/LalatinaHub/LatinaServer/constant"
-	splitter "github.com/LalatinaHub/tls-splitter"
+	// splitter "github.com/LalatinaHub/tls-splitter"
 	"golang.org/x/sync/errgroup"
 )
 
@@ -36,7 +36,7 @@ func StartWebService() {
 	})
 
 	// Run tls splitter
-	go splitter.Run(ReadSplitterConfig())
+	// go splitter.Run(ReadSplitterConfig())
 
 	if err := g.Wait(); err != nil {
 		panic(err)
