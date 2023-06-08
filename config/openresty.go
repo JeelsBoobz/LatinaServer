@@ -1,6 +1,7 @@
 package config
 
 import (
+	"fmt"
 	"os"
 	"strconv"
 	"strings"
@@ -116,7 +117,7 @@ func WriteOpenrestyConfig() {
 
 	openrestyConfig = strings.Replace(openrestyConfig, "DOMAIN", os.Getenv("DOMAIN"), 1)
 	openrestyConfig = strings.Replace(openrestyConfig, "LOCATION_PLACEHOLDER", strings.Join(ll[:], "\n\n"), 1)
-	openrestyConfig = strings.Replace(openrestyConfig, "WEBSERVER_ADDRESS", CS.WebServerAddress, 1)
+	openrestyConfig = strings.Replace(openrestyConfig, "WEBSERVER_ADDRESS", fmt.Sprintf("127.0.0.1:%d", CS.WebServerPort), 1)
 
 	f, err := os.Create("/etc/openresty/nginx.conf")
 	if err != nil {

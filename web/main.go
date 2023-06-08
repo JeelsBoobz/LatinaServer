@@ -1,6 +1,7 @@
 package web
 
 import (
+	"fmt"
 	"net/http"
 	"time"
 
@@ -14,7 +15,7 @@ var (
 
 func StartWebService() {
 	web := &http.Server{
-		Addr:         CS.WebServerAddress,
+		Addr:         fmt.Sprintf(":%d", CS.WebServerPort),
 		Handler:      WebServer(),
 		ReadTimeout:  5 * time.Second,
 		WriteTimeout: 10 * time.Second,
