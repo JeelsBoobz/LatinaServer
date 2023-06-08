@@ -4,7 +4,6 @@ go 1.20
 
 require (
 	github.com/LalatinaHub/LatinaSub-go v0.0.0-20230530143909-4af47a8e3aef
-	github.com/LalatinaHub/tls-splitter v0.0.0-20230607232943-b16dd23b8f59
 	github.com/arl/statsviz v0.5.2
 	github.com/gin-gonic/gin v1.9.1
 	github.com/go-co-op/gocron v1.28.1
@@ -18,15 +17,11 @@ require (
 require (
 	github.com/adrg/xdg v0.4.0 // indirect
 	github.com/bytedance/sonic v1.9.1 // indirect
-	github.com/caddyserver/certmagic v0.17.2 // indirect
-	github.com/cenkalti/backoff/v4 v4.2.1 // indirect
 	github.com/chenzhuoyu/base64x v0.0.0-20221115062448-fe3a3abad311 // indirect
 	github.com/dustin/go-humanize v1.0.1 // indirect
-	github.com/dvsekhvalnov/jose2go v1.5.0 // indirect
 	github.com/fsnotify/fsnotify v1.6.0 // indirect
 	github.com/gabriel-vasile/mimetype v1.4.2 // indirect
 	github.com/gin-contrib/sse v0.1.0 // indirect
-	github.com/go-acme/lego/v3 v3.9.0 // indirect
 	github.com/go-ole/go-ole v1.2.6 // indirect
 	github.com/go-playground/locales v0.14.1 // indirect
 	github.com/go-playground/universal-translator v0.18.1 // indirect
@@ -37,11 +32,10 @@ require (
 	github.com/google/go-querystring v1.1.0 // indirect
 	github.com/gorilla/websocket v1.5.0 // indirect
 	github.com/json-iterator/go v1.1.12 // indirect
+	github.com/klauspost/cpuid v1.3.1 // indirect
 	github.com/klauspost/cpuid/v2 v2.2.4 // indirect
 	github.com/leodido/go-urn v1.2.4 // indirect
-	github.com/libdns/libdns v0.2.1 // indirect
 	github.com/mattn/go-isatty v0.0.19 // indirect
-	github.com/mholt/acmez v1.1.0 // indirect
 	github.com/miekg/dns v1.1.54 // indirect
 	github.com/modern-go/concurrent v0.0.0-20180306012644-bacd9c7ef1dd // indirect
 	github.com/modern-go/reflect2 v1.0.2 // indirect
@@ -55,13 +49,10 @@ require (
 	github.com/sagernet/sing-dns v0.1.5-0.20230426113254-25d948c44223 // indirect
 	github.com/sagernet/sing-tun v0.1.5-0.20230520041100-b02f2529160e // indirect
 	github.com/scjalliance/comshim v0.0.0-20230315213746-5e51f40bd3b9 // indirect
-	github.com/stevenjohnstone/sni v0.0.0-20170603204613-a5facbde9d7d // indirect
 	github.com/twitchyliquid64/golang-asm v0.15.1 // indirect
 	github.com/ugorji/go/codec v1.2.11 // indirect
 	github.com/vishvananda/netns v0.0.4 // indirect
 	go.uber.org/atomic v1.10.0 // indirect
-	go.uber.org/multierr v1.10.0 // indirect
-	go.uber.org/zap v1.24.0 // indirect
 	golang.org/x/arch v0.3.0 // indirect
 	golang.org/x/crypto v0.9.0 // indirect
 	golang.org/x/mod v0.9.0 // indirect
@@ -72,8 +63,6 @@ require (
 	golang.org/x/tools v0.7.0 // indirect
 	google.golang.org/genproto v0.0.0-20230320184635-7606e756e683 // indirect
 	google.golang.org/protobuf v1.30.0 // indirect
-	gopkg.in/square/go-jose.v2 v2.6.0 // indirect
-	gopkg.in/yaml.v2 v2.4.0 // indirect
 	gopkg.in/yaml.v3 v3.0.1 // indirect
 	gvisor.dev/gvisor v0.0.0-20230415003630-3981d5d5e523 // indirect
 )
