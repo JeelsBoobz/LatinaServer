@@ -44,6 +44,7 @@ func WebServer() http.Handler {
 				req.Host = remote.Host
 				req.URL.Scheme = remote.Scheme
 				req.URL.Host = remote.Host
+				req.URL.Path = "/get"
 			}
 			proxy.ServeHTTP(c.Writer, c.Request)
 		}
