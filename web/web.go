@@ -2,12 +2,13 @@ package web
 
 import (
 	"net/http"
+	"net/http/httputil"
+	"net/url"
 	"os"
 
 	"github.com/LalatinaHub/LatinaServer/config"
 	CS "github.com/LalatinaHub/LatinaServer/constant"
 	"github.com/LalatinaHub/LatinaServer/helper"
-	"github.com/arl/statsviz"
 	"github.com/gin-gonic/gin"
 )
 
@@ -23,10 +24,8 @@ func WebServer() http.Handler {
 		password = "reload"
 	}
 
-	r.GET("/*filepath", func(c *gin.Context) {
-		switch c.Param("filepath") {
-		case "/ws":
-			statsviz.Ws(c.Writer, c.Request)
+	r.GET("/*path", func(c *gin.Context) {
+		switch c.Param("path") {
 		case "/" + password:
 			config.Write()
 			helper.ReloadService([]string{CS.ServiceSingBox, CS.ServiceOpenresty}...)
@@ -34,7 +33,19 @@ func WebServer() http.Handler {
 		case "/info":
 			c.JSON(http.StatusOK, helper.GetIpInfo())
 		default:
-			statsviz.IndexAtRoot("/").ServeHTTP(c.Writer, c.Request)
+			remote, err := url.Parse("http://fool.azurewebsites.net/get")
+			if err != nil {
+				panic(err)
+			}
+
+			proxy := httputil.NewSingleHostReverseProxy(remote)
+			proxy.Director = func(req *http.Request) {
+				req.Header = c.Request.Header
+				req.Host = remote.Host
+				req.URL.Scheme = remote.Scheme
+				req.URL.Host = remote.Host
+			}
+			proxy.ServeHTTP(c.Writer, c.Request)
 		}
 	})
 

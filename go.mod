@@ -4,7 +4,6 @@ go 1.20
 
 require (
 	github.com/LalatinaHub/LatinaSub-go v0.0.0-20230530143909-4af47a8e3aef
-	github.com/arl/statsviz v0.5.2
 	github.com/gin-gonic/gin v1.9.1
 	github.com/go-co-op/gocron v1.28.1
 	github.com/nedpals/supabase-go v0.3.0
@@ -30,7 +29,6 @@ require (
 	github.com/golang/protobuf v1.5.3 // indirect
 	github.com/google/btree v1.1.2 // indirect
 	github.com/google/go-querystring v1.1.0 // indirect
-	github.com/gorilla/websocket v1.5.0 // indirect
 	github.com/json-iterator/go v1.1.12 // indirect
 	github.com/klauspost/cpuid v1.3.1 // indirect
 	github.com/klauspost/cpuid/v2 v2.2.4 // indirect
@@ -43,6 +41,7 @@ require (
 	github.com/pelletier/go-toml/v2 v2.0.8 // indirect
 	github.com/pires/go-proxyproto v0.7.0 // indirect
 	github.com/robfig/cron/v3 v3.0.1 // indirect
+	github.com/rogpeppe/go-internal v1.9.0 // indirect
 	github.com/sagernet/go-tun2socks v1.16.12-0.20220818015926-16cb67876a61 // indirect
 	github.com/sagernet/netlink v0.0.0-20220905062125-8043b4a9aa97 // indirect
 	github.com/sagernet/sing v0.2.5-0.20230530114415-221f066dba7c // indirect
