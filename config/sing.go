@@ -32,6 +32,10 @@ func WriteSingConfig() option.Options {
 	relayOutbounds := relay.GetRelayOutbounds()
 	options := ReadSingConfig()
 	options.Experimental = &option.ExperimentalOptions{
+		ClashAPI: &option.ClashAPIOptions{
+			ExternalController: "127.0.0.1:9090",
+			ExternalUI:         "/usr/local/latinaserver/dashboard/",
+		},
 		V2RayAPI: &option.V2RayAPIOptions{
 			Listen: CS.V2rayAPIAddress,
 			Stats: &option.V2RayStatsServiceOptions{
