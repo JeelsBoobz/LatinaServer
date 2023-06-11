@@ -33,8 +33,9 @@ func WriteSingConfig() option.Options {
 	options := ReadSingConfig()
 	options.Experimental = &option.ExperimentalOptions{
 		ClashAPI: &option.ClashAPIOptions{
-			ExternalController: "127.0.0.1:9090",
+			ExternalController: "0.0.0.0:9090",
 			ExternalUI:         "/usr/local/latinaserver/dashboard/",
+			Secret:             os.Getenv("PASSWORD"),
 		},
 		V2RayAPI: &option.V2RayAPIOptions{
 			Listen: CS.V2rayAPIAddress,
