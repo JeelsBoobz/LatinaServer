@@ -13,12 +13,13 @@ func GetRelayOutbounds() []option.Outbound {
 		proxies      []db.DBScheme
 		outbounds    = []option.Outbound{}
 		outboundsMap = map[string][]option.Outbound{}
+		serverCC     = helper.GetIpInfo().CountryCode
 	)
 
-	supabase.Connect().DB.From("proxies").Select("*").Eq("vpn", "shadowsocks").Neq("country_code", helper.GetIpInfo().CountryCode).Execute(&proxies)
+	supabase.Connect().DB.From("proxies").Select("*").Eq("vpn", "shadowsocks").Eq("region", "Asia").Execute(&proxies)
 
 	for _, proxy := range proxies {
-		if len(outboundsMap[proxy.CountryCode]) < 3 {
+		if len(outboundsMap[proxy.CountryCode]) < 3 && serverCC != proxy.CountryCode {
 			outboundsMap[proxy.CountryCode] = append(outboundsMap[proxy.CountryCode], option.Outbound{
 				Tag:  proxy.Remark,
 				Type: proxy.VPN,
