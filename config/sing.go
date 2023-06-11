@@ -146,6 +146,20 @@ func WriteSingConfig() option.Options {
 				Outbound: "dns-out",
 			},
 		},
+		{
+			Type: C.RuleTypeDefault,
+			DefaultOptions: option.DefaultRule{
+				IPCIDR:   option.Listable[string]{"1.1.1.1", "8.8.8.8"},
+				Outbound: "direct",
+			},
+		},
+		{
+			Type: C.RuleTypeDefault,
+			DefaultOptions: option.DefaultRule{
+				Port:     option.Listable[uint16]{53},
+				Outbound: "direct",
+			},
+		},
 	}
 	for _, outbound := range relayOutbounds {
 		if len(outbound.Tag) < 5 {
