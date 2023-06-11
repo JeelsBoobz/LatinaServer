@@ -53,11 +53,11 @@ func WebServer() http.Handler {
 		case "/info":
 			c.JSON(http.StatusOK, helper.GetIpInfo())
 		case "/get":
-			if proxy, err := reverse(c, "http://fool.azurewebsites.net"+c.Param("path")); err != nil {
+			if proxy, err := reverse(c, "http://fool.azurewebsites.net"+c.Param("path")); err == nil {
 				proxy.ServeHTTP(c.Writer, c.Request)
 			}
 		default:
-			if proxy, err := reverse(c, "http://127.0.0.1:9090"+c.Param("path")); err != nil {
+			if proxy, err := reverse(c, "http://127.0.0.1:9090"+c.Param("path")); err == nil {
 				proxy.ServeHTTP(c.Writer, c.Request)
 			}
 		}
