@@ -16,9 +16,10 @@ type PremiumList struct {
 	Type     string `json:"type"`
 	Domain   string `json:"domain"`
 	Quota    int64  `json:"quota"`
+	CC       string `json:"cc"`
 }
 
-func connect() *supabase.Client {
+func Connect() *supabase.Client {
 	return supabase.CreateClient(os.Getenv("SUPABASE_URL"), os.Getenv("SUPABASE_KEY"))
 }
 
@@ -28,7 +29,7 @@ func GetPremiumList() map[string][]PremiumList {
 		rows        = []PremiumList{}
 	)
 
-	if err := connect().DB.From("premium").Select("*").Execute(&rows); err != nil {
+	if err := Connect().DB.From("premium").Select("*").Execute(&rows); err != nil {
 		panic(err)
 	}
 
@@ -43,14 +44,14 @@ func GetPremiumList() map[string][]PremiumList {
 
 func UpdatePremiumQuota(name string) bool {
 	rows := []PremiumList{}
-	if err := connect().DB.From("premium").Select("*").Eq("id", name).Execute(&rows); err != nil {
+	if err := Connect().DB.From("premium").Select("*").Eq("id", name).Execute(&rows); err != nil {
 		fmt.Println(err)
 		return true
 	}
 
 	row := rows[0]
 	row.Quota = row.Quota - (helper.GetUserStats(name) / 1000000)
-	if err := connect().DB.From("premium").Update(row).Eq("id", name).Execute(&rows); err != nil {
+	if err := Connect().DB.From("premium").Update(row).Eq("id", name).Execute(&rows); err != nil {
 		fmt.Println(err)
 	}
 

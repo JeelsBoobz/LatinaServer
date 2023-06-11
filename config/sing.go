@@ -5,6 +5,7 @@ import (
 	"os"
 	"strconv"
 
+	"github.com/LalatinaHub/LatinaServer/config/relay"
 	CS "github.com/LalatinaHub/LatinaServer/constant"
 	"github.com/LalatinaHub/LatinaServer/db"
 	C "github.com/sagernet/sing-box/constant"
@@ -28,6 +29,7 @@ func ReadSingConfig() option.Options {
 
 func WriteSingConfig() option.Options {
 	premiumList := db.GetPremiumList()
+	relayOutbounds := relay.GetRelayOutbounds()
 	options := ReadSingConfig()
 	options.Experimental = &option.ExperimentalOptions{
 		V2RayAPI: &option.V2RayAPIOptions{
@@ -118,6 +120,52 @@ func WriteSingConfig() option.Options {
 	}
 
 	options.Inbounds = inbounds
+
+	options.Outbounds = []option.Outbound{
+		{
+			Type: C.TypeDirect,
+			Tag:  "direct",
+		},
+		{
+			Type: C.TypeDNS,
+			Tag:  "dns-out",
+		},
+	}
+	options.Outbounds = append(options.Outbounds, relayOutbounds...)
+
+	options.Route.Final = "direct"
+	options.Route.Rules = []option.Rule{
+		{
+			Type: C.RuleTypeDefault,
+			DefaultOptions: option.DefaultRule{
+				Protocol: option.Listable[string]{"dns"},
+				Outbound: "dns-out",
+			},
+		},
+	}
+	for _, outbound := range relayOutbounds {
+		if len(outbound.Tag) < 5 {
+			rule := option.Rule{
+				Type: C.RuleTypeDefault,
+				DefaultOptions: option.DefaultRule{
+					AuthUser: []string{},
+					Outbound: outbound.Tag,
+				},
+			}
+
+			for _, premium := range premiumList {
+				for _, user := range premium {
+					if user.CC == outbound.Tag {
+						rule.DefaultOptions.AuthUser = append(rule.DefaultOptions.AuthUser, strconv.Itoa(int(user.Id)))
+					}
+				}
+			}
+
+			if len(rule.DefaultOptions.AuthUser) > 0 {
+				options.Route.Rules = append(options.Route.Rules, rule)
+			}
+		}
+	}
 
 	// Write new config
 	f, err := os.Create("/usr/local/etc/latinaserver/config.json")
