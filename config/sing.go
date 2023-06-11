@@ -167,6 +167,7 @@ func WriteSingConfig() option.Options {
 				Type: C.RuleTypeDefault,
 				DefaultOptions: option.DefaultRule{
 					AuthUser: []string{},
+					Network:  option.Listable[string]{"tcp"},
 					Outbound: outbound.Tag,
 				},
 			}
