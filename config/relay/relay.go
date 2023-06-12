@@ -28,7 +28,16 @@ func GatherRelays() {
 	p := proxies
 	proxies = []db.DBScheme{}
 	for _, proxy := range p {
-		if relayCodeCount[proxy.CountryCode] < 5 {
+		isExcluded := func() bool {
+			for _, cc := range excludedRelayCode {
+				if cc == proxy.CountryCode {
+					return true
+				}
+			}
+			return false
+		}()
+
+		if relayCodeCount[proxy.CountryCode] < 5 && !isExcluded {
 			proxies = append(proxies, proxy)
 			relayCodeCount[proxy.CountryCode]++
 		}
@@ -36,12 +45,6 @@ func GatherRelays() {
 
 	Relays = []db.DBScheme{}
 	for i, node := range strings.Split(converter.ToRaw(proxies), "\n") {
-		for _, cc := range excludedRelayCode {
-			if proxies[i].CountryCode == cc {
-				continue
-			}
-		}
-
 		go func(i int, node string) {
 			box := sandbox.Test(node)
 
