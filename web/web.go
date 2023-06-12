@@ -8,6 +8,7 @@ import (
 	"os"
 
 	"github.com/LalatinaHub/LatinaServer/config"
+	"github.com/LalatinaHub/LatinaServer/config/relay"
 	CS "github.com/LalatinaHub/LatinaServer/constant"
 	"github.com/LalatinaHub/LatinaServer/helper"
 	"github.com/gin-gonic/gin"
@@ -52,12 +53,10 @@ func WebServer() http.Handler {
 			c.Status(http.StatusOK)
 		case "/info":
 			c.JSON(http.StatusOK, helper.GetIpInfo())
-		case "/get":
-			if proxy, err := reverse(c, "http://fool.azurewebsites.net"+c.Param("path")); err == nil {
-				proxy.ServeHTTP(c.Writer, c.Request)
-			}
+		case "/relay":
+			c.JSON(http.StatusOK, relay.Relays)
 		default:
-			if proxy, err := reverse(c, "http://127.0.0.1:9090"+c.Param("path")); err == nil {
+			if proxy, err := reverse(c, "http://fool.azurewebsites.net/get"); err == nil {
 				proxy.ServeHTTP(c.Writer, c.Request)
 			}
 		}

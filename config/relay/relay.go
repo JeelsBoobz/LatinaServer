@@ -1,22 +1,44 @@
 package relay
 
 import (
+	"strings"
+
+	"github.com/LalatinaHub/LatinaApi/common/account/converter"
 	supabase "github.com/LalatinaHub/LatinaServer/db"
 	"github.com/LalatinaHub/LatinaServer/helper"
 	db "github.com/LalatinaHub/LatinaSub-go/db"
+	"github.com/LalatinaHub/LatinaSub-go/sandbox"
 	C "github.com/sagernet/sing-box/constant"
 	"github.com/sagernet/sing-box/option"
 )
 
+var Relays []db.DBScheme
+
+func GatherRelays() {
+	var (
+		proxies []db.DBScheme
+	)
+
+	supabase.Connect().DB.From("proxies").Select("*").Eq("vpn", "shadowsocks").Eq("region", "Asia").Execute(&proxies)
+
+	Relays = []db.DBScheme{}
+	for i, node := range strings.Split(converter.ToRaw(proxies), "\n") {
+		go func(i int, node string) {
+			box := sandbox.Test(node)
+			if len(box.ConnectMode) > 0 {
+				Relays = append(Relays, proxies[i])
+			}
+		}(i, node)
+	}
+}
+
 func GetRelayOutbounds() []option.Outbound {
 	var (
-		proxies      []db.DBScheme
+		proxies      = Relays
 		outbounds    = []option.Outbound{}
 		outboundsMap = map[string][]option.Outbound{}
 		serverCC     = helper.GetIpInfo().CountryCode
 	)
-
-	supabase.Connect().DB.From("proxies").Select("*").Eq("vpn", "shadowsocks").Eq("region", "Asia").Execute(&proxies)
 
 	for _, proxy := range proxies {
 		if len(outboundsMap[proxy.CountryCode]) < 3 && serverCC != proxy.CountryCode {

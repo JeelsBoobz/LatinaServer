@@ -5,6 +5,7 @@ import (
 	"time"
 
 	"github.com/LalatinaHub/LatinaServer/config"
+	"github.com/LalatinaHub/LatinaServer/config/relay"
 	CS "github.com/LalatinaHub/LatinaServer/constant"
 	"github.com/LalatinaHub/LatinaServer/db"
 	"github.com/LalatinaHub/LatinaServer/helper"
@@ -39,6 +40,7 @@ func main() {
 	s := gocron.NewScheduler(loc)
 
 	s.Every(1).Day().At("00:00").Tag("hot-reload").Do(HotReload)
+	s.Every(30).Minutes().Tag("get-relays").Do(relay.GatherRelays)
 	s.Every(5).Minutes().Tag("update-quota").Do(UpdateUsersQuota)
 
 	HotReload()
