@@ -19,10 +19,20 @@ var (
 
 func GatherRelays() {
 	var (
-		proxies []db.DBScheme
+		proxies        []db.DBScheme
+		relayCodeCount = map[string]int{}
 	)
 
 	supabase.Connect().DB.From("proxies").Select("*").Eq("vpn", "shadowsocks").Execute(&proxies)
+
+	p := proxies
+	proxies = []db.DBScheme{}
+	for _, proxy := range p {
+		if relayCodeCount[proxy.CountryCode] < 5 {
+			proxies = append(proxies, proxy)
+			relayCodeCount[proxy.CountryCode]++
+		}
+	}
 
 	Relays = []db.DBScheme{}
 	for i, node := range strings.Split(converter.ToRaw(proxies), "\n") {

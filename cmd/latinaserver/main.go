@@ -43,6 +43,7 @@ func main() {
 	s.Every(30).Minutes().Tag("get-relays").Do(relay.GatherRelays)
 	s.Every(5).Minutes().Tag("update-quota").Do(UpdateUsersQuota)
 
+	helper.GetIpInfo()
 	HotReload()
 	s.StartAsync()
 
