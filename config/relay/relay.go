@@ -2,6 +2,7 @@ package relay
 
 import (
 	"strings"
+	"time"
 
 	"github.com/LalatinaHub/LatinaApi/common/account/converter"
 	supabase "github.com/LalatinaHub/LatinaServer/db"
@@ -24,9 +25,14 @@ func GatherRelays() {
 	Relays = []db.DBScheme{}
 	for i, node := range strings.Split(converter.ToRaw(proxies), "\n") {
 		go func(i int, node string) {
+			start := time.Now()
 			box := sandbox.Test(node)
+			duration := time.Since(start)
+
 			if len(box.ConnectMode) > 0 {
-				Relays = append(Relays, proxies[i])
+				if duration.Milliseconds() < 800 {
+					Relays = append(Relays, proxies[i])
+				}
 			}
 		}(i, node)
 	}
