@@ -20,6 +20,7 @@ var password = func() string {
 var endpoints = []string{password(), "info", "relay", "get"}
 var locationTemplace = []string{
 	`		location /PATH {`,
+	`			proxy_redirect off;`,
 	`			proxy_set_header X-Real-IP $remote_addr;`,
 	`			proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;`,
 	`			proxy_set_header Upgrade $http_upgrade;`,
@@ -29,9 +30,7 @@ var locationTemplace = []string{
 	`			if ($http_upgrade = "websocket") {`,
 	`				proxy_pass "http://127.0.0.1:WS_PORT";`,
 	`			}`,
-	`			if ($content_type = "application/grpc") {`,
-	`				grpc_pass "grpc://127.0.0.1:GRPC_PORT";`,
-	`			}`,
+	`			ARG`,
 	`		}`,
 }
 
@@ -64,8 +63,7 @@ func WriteOpenrestyConfig() {
 				case C.V2RayTransportTypeWebsocket:
 					location = strings.Replace(location, C.TypeTrojan, "", 1)
 					location = strings.Replace(location, "WS_PORT", strconv.Itoa(int(trojan.ListenPort)), 1)
-				case C.V2RayTransportTypeGRPC:
-					location = strings.Replace(location, "GRPC_PORT", strconv.Itoa(int(trojan.ListenPort)), 1)
+					location = strings.Replace(location, "ARG", "rewrite / /multi break;", 1)
 				}
 
 				locations[C.TypeTrojan] = location
@@ -85,8 +83,6 @@ func WriteOpenrestyConfig() {
 				switch vless.Transport.Type {
 				case C.V2RayTransportTypeWebsocket:
 					location = strings.Replace(location, "WS_PORT", strconv.Itoa(int(vless.ListenPort)), 1)
-				case C.V2RayTransportTypeGRPC:
-					location = strings.Replace(location, "GRPC_PORT", strconv.Itoa(int(vless.ListenPort)), 1)
 				}
 
 				locations[C.TypeVLESS] = location
@@ -107,9 +103,8 @@ func WriteOpenrestyConfig() {
 
 				switch vmess.Transport.Type {
 				case C.V2RayTransportTypeWebsocket:
-					location = strings.Replace(location, "WS_PORT", strconv.Itoa(int(vmess.ListenPort))+"/multi", 1)
-				case C.V2RayTransportTypeGRPC:
-					location = strings.Replace(location, "GRPC_PORT", strconv.Itoa(int(vmess.ListenPort))+"/multi", 1)
+					location = strings.Replace(location, "WS_PORT", strconv.Itoa(int(vmess.ListenPort)), 1)
+					location = strings.Replace(location, "ARG", "rewrite /vmess /multi break;", 1)
 				}
 
 				locations[C.TypeVMess] = location
@@ -135,6 +130,7 @@ func WriteOpenrestyConfig() {
 
 	openrestyConfig = strings.Replace(openrestyConfig, "DOMAIN", os.Getenv("DOMAIN"), -1)
 	openrestyConfig = strings.Replace(openrestyConfig, "LOCATION_PLACEHOLDER", strings.Join(ll[:], "\n\n"), -1)
+	openrestyConfig = strings.ReplaceAll(openrestyConfig, "ARG", "")
 
 	f, err := os.Create("/etc/openresty/nginx.conf")
 	if err != nil {
