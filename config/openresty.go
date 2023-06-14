@@ -104,7 +104,6 @@ func WriteOpenrestyConfig() {
 				switch vmess.Transport.Type {
 				case C.V2RayTransportTypeWebsocket:
 					location = strings.Replace(location, "WS_PORT", strconv.Itoa(int(vmess.ListenPort)), 1)
-					location = strings.Replace(location, "ARG", "rewrite /vmess /multi break;", 1)
 				}
 
 				locations[C.TypeVMess] = location

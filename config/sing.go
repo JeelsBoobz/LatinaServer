@@ -67,30 +67,9 @@ func WriteSingConfig() option.Options {
 			}
 
 			if inbound.TrojanOptions.Transport != nil {
-				vmessWsPort := func() uint16 {
-					for _, inbound := range options.Inbounds {
-						if inbound.Type == C.TypeVMess {
-							vmess := inbound.VMessOptions
-							if vmess.Transport != nil {
-								var ws uint16
-								switch vmess.Transport.Type {
-								case C.V2RayTransportTypeWebsocket:
-									ws = vmess.ListenPort
-								}
-								return ws
-							}
-						}
-					}
-					return 0
-				}()
-
 				switch inbound.TrojanOptions.Transport.Type {
 				case C.V2RayTransportTypeWebsocket:
 					inbound.TrojanOptions.Transport.WebsocketOptions.Path = "/multi"
-					inbound.TrojanOptions.Fallback = &option.ServerOptions{
-						Server:     "127.0.0.1",
-						ServerPort: vmessWsPort,
-					}
 				}
 			}
 		case C.TypeVMess:
@@ -107,7 +86,7 @@ func WriteSingConfig() option.Options {
 			if inbound.VMessOptions.Transport != nil {
 				switch inbound.VMessOptions.Transport.Type {
 				case C.V2RayTransportTypeWebsocket:
-					inbound.VMessOptions.Transport.WebsocketOptions.Path = "/multi"
+					inbound.VMessOptions.Transport.WebsocketOptions.Path = "/" + inbound.Type
 				}
 			}
 		case C.TypeVLESS:
