@@ -30,29 +30,9 @@
       "listen_port": 52001,
       "tcp_fast_open": true,
       "udp_fragment": true,
-      "fallback": {
-        "server": "127.0.0.1",
-        "server_port": 52004
-      },
       "transport": {
         "type": "ws",
         "path": "/multi"
-      }
-    },
-    {
-      "type": "trojan",
-      "tag": "trojan-grpc",
-      "listen": "127.0.0.1",
-      "listen_port": 52002,
-      "tcp_fast_open": true,
-      "udp_fragment": true,
-      "fallback": {
-        "server": "127.0.0.1",
-        "server_port": 0
-      },
-      "transport": {
-        "type": "grpc",
-        "service_name": "multi"
       }
     },
     {
@@ -76,18 +56,6 @@
       }
     },
     {
-      "type": "vmess",
-      "tag": "vmess-grpc",
-      "listen": "127.0.0.1",
-      "listen_port": 52005,
-      "tcp_fast_open": true,
-      "udp_fragment": true,
-      "transport": {
-        "type": "grpc",
-        "service_name": "multi"
-      }
-    },
-    {
       "type": "vless",
       "tag": "vless",
       "listen": "127.0.0.1",
@@ -105,18 +73,6 @@
       "transport": {
         "type": "ws",
         "path": "/vless"
-      }
-    },
-    {
-      "type": "vless",
-      "tag": "vless-grpc",
-      "listen": "127.0.0.1",
-      "listen_port": 52008,
-      "tcp_fast_open": true,
-      "udp_fragment": true,
-      "transport": {
-        "type": "grpc",
-        "service_name": "vless"
       }
     }
   ],
@@ -156,17 +112,7 @@
       "listen": "127.0.0.1:5555",
       "stats": {
         "enabled": true,
-        "inbounds": [
-          "trojan",
-          "trojan-ws",
-          "trojan-grpc",
-          "vmess",
-          "vmess-ws",
-          "vmess-grpc",
-          "vless",
-          "vless-ws",
-          "vless-grpc"
-        ],
+        "inbounds": ["trojan", "trojan-ws", "vmess", "vmess-ws", "vless", "vless-ws"],
         "outbounds": ["direct"]
       }
     }
