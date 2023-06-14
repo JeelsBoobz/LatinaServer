@@ -1,7 +1,6 @@
 package config
 
 import (
-	"fmt"
 	"os"
 	"strconv"
 	"strings"
@@ -10,6 +9,15 @@ import (
 	C "github.com/sagernet/sing-box/constant"
 )
 
+var password = func() string {
+	pass := os.Getenv("PASSWORD")
+	if pass != "" {
+		return pass
+	}
+	return "reload"
+}
+
+var endpoints = []string{password(), "info", "relay", "get"}
 var locationTemplace = []string{
 	`		location /PATH {`,
 	`			proxy_set_header X-Real-IP $remote_addr;`,
@@ -54,6 +62,7 @@ func WriteOpenrestyConfig() {
 
 				switch trojan.Transport.Type {
 				case C.V2RayTransportTypeWebsocket:
+					location = strings.Replace(location, C.TypeTrojan, "", 1)
 					location = strings.Replace(location, "WS_PORT", strconv.Itoa(int(trojan.ListenPort)), 1)
 				case C.V2RayTransportTypeGRPC:
 					location = strings.Replace(location, "GRPC_PORT", strconv.Itoa(int(trojan.ListenPort)), 1)
@@ -98,9 +107,9 @@ func WriteOpenrestyConfig() {
 
 				switch vmess.Transport.Type {
 				case C.V2RayTransportTypeWebsocket:
-					location = strings.Replace(location, "WS_PORT", strconv.Itoa(int(vmess.ListenPort)), 1)
+					location = strings.Replace(location, "WS_PORT", strconv.Itoa(int(vmess.ListenPort))+"/multi", 1)
 				case C.V2RayTransportTypeGRPC:
-					location = strings.Replace(location, "GRPC_PORT", strconv.Itoa(int(vmess.ListenPort)), 1)
+					location = strings.Replace(location, "GRPC_PORT", strconv.Itoa(int(vmess.ListenPort))+"/multi", 1)
 				}
 
 				locations[C.TypeVMess] = location
@@ -115,9 +124,17 @@ func WriteOpenrestyConfig() {
 		ll = append(ll, loc)
 	}
 
-	openrestyConfig = strings.Replace(openrestyConfig, "DOMAIN", os.Getenv("DOMAIN"), 1)
-	openrestyConfig = strings.Replace(openrestyConfig, "LOCATION_PLACEHOLDER", strings.Join(ll[:], "\n\n"), 1)
-	openrestyConfig = strings.Replace(openrestyConfig, "WEBSERVER_ADDRESS", fmt.Sprintf("127.0.0.1:%d", CS.WebServerPort), 1)
+	for _, endpoint := range endpoints {
+		loc := []string{
+			`		location /` + endpoint + ` {`,
+			`			proxy_pass "http://127.0.0.1:` + strconv.Itoa(CS.WebServerPort) + `";`,
+			`		}`,
+		}
+		ll = append(ll, strings.Join(loc, "\n"))
+	}
+
+	openrestyConfig = strings.Replace(openrestyConfig, "DOMAIN", os.Getenv("DOMAIN"), -1)
+	openrestyConfig = strings.Replace(openrestyConfig, "LOCATION_PLACEHOLDER", strings.Join(ll[:], "\n\n"), -1)
 
 	f, err := os.Create("/etc/openresty/nginx.conf")
 	if err != nil {

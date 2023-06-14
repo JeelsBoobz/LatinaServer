@@ -67,11 +67,39 @@ func WriteSingConfig() option.Options {
 			}
 
 			if inbound.TrojanOptions.Transport != nil {
+				vmessWsPort, vmessGrpcPort := func() (uint16, uint16) {
+					for _, inbound := range options.Inbounds {
+						if inbound.Type == C.TypeVMess {
+							vmess := inbound.VMessOptions
+							if vmess.Transport != nil {
+								var ws, grpc uint16
+								switch vmess.Transport.Type {
+								case C.V2RayTransportTypeWebsocket:
+									ws = vmess.ListenPort
+								case C.V2RayTransportTypeGRPC:
+									grpc = vmess.ListenPort
+								}
+
+								return ws, grpc
+							}
+						}
+					}
+					return 0, 0
+				}()
+
 				switch inbound.TrojanOptions.Transport.Type {
 				case C.V2RayTransportTypeWebsocket:
-					inbound.TrojanOptions.Transport.WebsocketOptions.Path = "/" + inbound.Type
+					inbound.TrojanOptions.Transport.WebsocketOptions.Path = "/multi"
+					inbound.TrojanOptions.Fallback = &option.ServerOptions{
+						Server:     "127.0.0.1",
+						ServerPort: vmessWsPort,
+					}
 				case C.V2RayTransportTypeGRPC:
-					inbound.TrojanOptions.Transport.GRPCOptions.ServiceName = inbound.Type
+					inbound.TrojanOptions.Transport.GRPCOptions.ServiceName = "multi"
+					inbound.TrojanOptions.Fallback = &option.ServerOptions{
+						Server:     "127.0.0.1",
+						ServerPort: vmessGrpcPort,
+					}
 				}
 			}
 		case C.TypeVMess:
@@ -88,9 +116,9 @@ func WriteSingConfig() option.Options {
 			if inbound.VMessOptions.Transport != nil {
 				switch inbound.VMessOptions.Transport.Type {
 				case C.V2RayTransportTypeWebsocket:
-					inbound.VMessOptions.Transport.WebsocketOptions.Path = "/" + inbound.Type
+					inbound.VMessOptions.Transport.WebsocketOptions.Path = "/multi"
 				case C.V2RayTransportTypeGRPC:
-					inbound.VMessOptions.Transport.GRPCOptions.ServiceName = inbound.Type
+					inbound.VMessOptions.Transport.GRPCOptions.ServiceName = "multi"
 				}
 			}
 		case C.TypeVLESS:

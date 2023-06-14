@@ -14,7 +14,7 @@ import (
 
 var (
 	Relays            []db.DBScheme
-	excludedRelayCode = []string{"CN", helper.GetIpInfo().CountryCode}
+	excludedRelayCode = []string{helper.GetIpInfo().CountryCode}
 )
 
 func GatherRelays() {

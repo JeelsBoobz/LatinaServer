@@ -1,6 +1,6 @@
 {
   "log": {
-    "level": "error"
+    "level": "info"
   },
   "dns": {
     "servers": [
@@ -30,9 +30,13 @@
       "listen_port": 52001,
       "tcp_fast_open": true,
       "udp_fragment": true,
+      "fallback": {
+        "server": "127.0.0.1",
+        "server_port": 52004
+      },
       "transport": {
         "type": "ws",
-        "path": "/trojan"
+        "path": "/multi"
       }
     },
     {
@@ -42,9 +46,13 @@
       "listen_port": 52002,
       "tcp_fast_open": true,
       "udp_fragment": true,
+      "fallback": {
+        "server": "127.0.0.1",
+        "server_port": 0
+      },
       "transport": {
         "type": "grpc",
-        "service_name": "trojan"
+        "service_name": "multi"
       }
     },
     {
@@ -64,7 +72,7 @@
       "udp_fragment": true,
       "transport": {
         "type": "ws",
-        "path": "/vmess"
+        "path": "/multi"
       }
     },
     {
@@ -76,7 +84,7 @@
       "udp_fragment": true,
       "transport": {
         "type": "grpc",
-        "service_name": "vmess"
+        "service_name": "multi"
       }
     },
     {
@@ -127,13 +135,21 @@
       {
         "protocol": "dns",
         "outbound": "dns-out"
+      },
+      {
+        "ip_cidr": ["1.1.1.1", "8.8.8.8"],
+        "outbound": "direct"
+      },
+      {
+        "port": 53,
+        "outbound": "direct"
       }
     ],
     "final": "direct"
   },
   "experimental": {
     "clash_api": {
-      "external_controller": "127.0.0.1:9090",
+      "external_controller": "0.0.0.0:9090",
       "external_ui": "/usr/local/latinaserver/dashboard/"
     },
     "v2ray_api": {
