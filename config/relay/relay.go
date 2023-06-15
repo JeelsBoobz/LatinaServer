@@ -21,6 +21,7 @@ func GatherRelays() {
 	var (
 		proxies        []db.DBScheme
 		relayCodeCount = map[string]int{}
+		ipServerList   = []string{}
 	)
 
 	supabase.Connect().DB.From("proxies").Select("*").Eq("vpn", "shadowsocks").Execute(&proxies)
@@ -28,6 +29,14 @@ func GatherRelays() {
 	p := proxies
 	proxies = []db.DBScheme{}
 	for _, proxy := range p {
+		isExists := func() bool {
+			for _, ip := range ipServerList {
+				if ip == proxy.Ip || proxy.Ip == "" {
+					return true
+				}
+			}
+			return false
+		}()
 		isExcluded := func() bool {
 			for _, cc := range excludedRelayCode {
 				if cc == proxy.CountryCode {
@@ -37,9 +46,11 @@ func GatherRelays() {
 			return false
 		}()
 
-		if relayCodeCount[proxy.CountryCode] < 5 && !isExcluded {
+		if relayCodeCount[proxy.CountryCode] < 10 && !isExcluded && !isExists {
 			proxies = append(proxies, proxy)
 			relayCodeCount[proxy.CountryCode]++
+
+			ipServerList = append(ipServerList, proxy.Ip)
 		}
 	}
 
