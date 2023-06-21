@@ -30,6 +30,9 @@ var locationTemplace = []string{
 	`			if ($http_upgrade = "websocket") {`,
 	`				proxy_pass "http://127.0.0.1:WS_PORT";`,
 	`			}`,
+	`			if ($http_upgrade != "websocket") {`,
+	`				proxy_pass "http://127.0.0.1:` + strconv.Itoa(CS.WebServerPort) + `";`,
+	`			}`,
 	`			ARG`,
 	`		}`,
 }
