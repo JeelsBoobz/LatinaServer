@@ -34,7 +34,7 @@ func GetPremiumList() map[string][]PremiumList {
 	}
 
 	for _, premium := range rows {
-		if premium.Domain == domain && premium.Quota > 0 {
+		if premium.Quota > 0 {
 			premiumList[premium.Type] = append(premiumList[premium.Type], premium)
 		}
 	}
