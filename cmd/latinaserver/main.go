@@ -28,6 +28,8 @@ func UpdateUsersQuota() {
 		if !db.UpdatePremiumQuota(user) {
 			isAnyExceed = true
 		}
+
+		time.Sleep(500 * time.Millisecond)
 	}
 
 	if isAnyExceed {
