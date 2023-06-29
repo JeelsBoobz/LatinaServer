@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"os/exec"
 	"time"
 
 	"github.com/LalatinaHub/LatinaServer/config"
@@ -44,6 +45,11 @@ func main() {
 	s.Every(1).Day().At("00:00").Tag("hot-reload").Do(HotReload)
 	s.Every(30).Minutes().Tag("get-relays").Do(relay.GatherRelays)
 	s.Every(5).Minutes().Tag("update-quota").Do(UpdateUsersQuota)
+	s.Every(1).Day().At("03:00").Tag("reboot").Do(func() {
+		if err := exec.Command("reboot").Run(); err != nil {
+			fmt.Println("Failed to reboot the server !", err)
+		}
+	})
 
 	helper.GetIpInfo()
 	HotReload()
