@@ -135,10 +135,12 @@ func WriteSingConfig() option.Options {
 
 	options.Route = &option.RouteOptions{
 		GeoIP: &option.GeoIPOptions{
+			Path:           "/usr/local/etc/sing-box/geoip.db",
 			DownloadURL:    "https://github.com/malikshi/sing-box-geo/releases/latest/download/geoip.db",
 			DownloadDetour: "direct",
 		},
 		Geosite: &option.GeositeOptions{
+			Path:           "/usr/local/etc/sing-box/geosite.db",
 			DownloadURL:    "https://github.com/malikshi/sing-box-geo/releases/latest/download/geosite.db",
 			DownloadDetour: "direct",
 		},
