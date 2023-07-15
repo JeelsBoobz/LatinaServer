@@ -4,10 +4,12 @@ import (
 	"encoding/json"
 	"os"
 	"strconv"
+	"strings"
 
 	"github.com/LalatinaHub/LatinaServer/config/relay"
 	CS "github.com/LalatinaHub/LatinaServer/constant"
 	"github.com/LalatinaHub/LatinaServer/db"
+	"github.com/LalatinaHub/LatinaServer/helper"
 	C "github.com/sagernet/sing-box/constant"
 	"github.com/sagernet/sing-box/option"
 )
@@ -119,7 +121,6 @@ func WriteSingConfig() option.Options {
 	}
 
 	options.Inbounds = inbounds
-
 	options.Outbounds = []option.Outbound{
 		{
 			Type: C.TypeDirect,
@@ -132,30 +133,69 @@ func WriteSingConfig() option.Options {
 	}
 	options.Outbounds = append(options.Outbounds, relayOutbounds...)
 
-	options.Route.Final = "direct"
-	options.Route.Rules = []option.Rule{
-		{
-			Type: C.RuleTypeDefault,
-			DefaultOptions: option.DefaultRule{
-				Protocol: option.Listable[string]{"dns"},
-				Outbound: "dns-out",
+	options.Route = &option.RouteOptions{
+		GeoIP: &option.GeoIPOptions{
+			DownloadURL:    "https://github.com/malikshi/sing-box-geo/releases/latest/download/geoip.db",
+			DownloadDetour: "direct",
+		},
+		Geosite: &option.GeositeOptions{
+			DownloadURL:    "https://github.com/malikshi/sing-box-geo/releases/latest/download/geosite.db",
+			DownloadDetour: "direct",
+		},
+		Rules: []option.Rule{
+			{
+				Type: C.RuleTypeDefault,
+				DefaultOptions: option.DefaultRule{
+					Protocol: option.Listable[string]{"dns"},
+					Outbound: "dns-out",
+				},
+			},
+			{
+				Type: C.RuleTypeDefault,
+				DefaultOptions: option.DefaultRule{
+					IPCIDR:   option.Listable[string]{"1.1.1.1", "8.8.8.8"},
+					Outbound: "direct",
+				},
+			},
+			{
+				Type: C.RuleTypeDefault,
+				DefaultOptions: option.DefaultRule{
+					Port:     option.Listable[uint16]{53},
+					Outbound: "direct",
+				},
 			},
 		},
-		{
-			Type: C.RuleTypeDefault,
-			DefaultOptions: option.DefaultRule{
-				IPCIDR:   option.Listable[string]{"1.1.1.1", "8.8.8.8"},
-				Outbound: "direct",
-			},
-		},
-		{
-			Type: C.RuleTypeDefault,
-			DefaultOptions: option.DefaultRule{
-				Port:     option.Listable[uint16]{53},
-				Outbound: "direct",
-			},
-		},
+		Final: "direct",
 	}
+
+	// Spesific route each server
+	serverInfo := helper.GetIpInfo()
+	serverCode := strings.Split(serverInfo.Org, " ")[0]
+	switch serverCode {
+	case "AS133800":
+		for _, outbound := range options.Outbounds {
+			if outbound.Tag == "SG" {
+				options.Route.Rules = append(options.Route.Rules, []option.Rule{
+					{
+						Type: C.RuleTypeDefault,
+						DefaultOptions: option.DefaultRule{
+							Geosite:  option.Listable[string]{"google", "rule-playstore", "rule-streaming"},
+							Outbound: "SG",
+						},
+					},
+					{
+						Type: C.RuleTypeDefault,
+						DefaultOptions: option.DefaultRule{
+							GeoIP:    option.Listable[string]{"google"},
+							Outbound: "SG",
+						},
+					}}...)
+				break
+			}
+		}
+	}
+
+	// Relay for spesific user
 	for _, outbound := range relayOutbounds {
 		if len(outbound.Tag) < 5 {
 			rule := option.Rule{
