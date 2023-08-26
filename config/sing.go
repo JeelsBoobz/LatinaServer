@@ -195,20 +195,6 @@ func WriteSingConfig() option.Options {
 				break
 			}
 		}
-	case "AS58487":
-		for _, outbound := range options.Outbounds {
-			if outbound.Tag == "SG" {
-				options.Route.Rules = append(options.Route.Rules, []option.Rule{
-					{
-						Type: C.RuleTypeDefault,
-						DefaultOptions: option.DefaultRule{
-							Network:  option.Listable[string]{"tcp"},
-							Outbound: "SG",
-						},
-					}}...)
-				break
-			}
-		}
 	}
 
 	// Relay for spesific user
