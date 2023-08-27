@@ -65,9 +65,9 @@ func WriteSingConfig() option.Options {
 	}
 
 	var inbounds []option.Inbound
-	for i, inbound := range options.Inbounds {
+	for _, inbound := range options.Inbounds {
 		var (
-			port              = 52000 + i
+			port              = 52000 + len(inbounds)
 			generatedInbounds = []option.Inbound{}
 		)
 
@@ -122,22 +122,23 @@ func WriteSingConfig() option.Options {
 				case C.V2RayTransportTypeWebsocket:
 					inbound.VLESSOptions.Transport.WebsocketOptions.Path = "/" + inbound.Type
 				}
-			}
+			} else {
+				if inbound.VLESSOptions.TLS == nil {
+					for _, sni := range sniList {
+						var generatedInbound = inbound
 
-			if inbound.Tag == C.TypeVLESS {
-				for _, sni := range sniList {
-					var generatedInbound = inbound
-
-					port = port + 1
-					realityOptions.Handshake.Server = sni
-					generatedInbound.Tag = generatedInbound.Tag + "-reality-" + sni
-					generatedInbound.VLESSOptions.ListenPort = uint16(port)
-					generatedInbound.VLESSOptions.TLS = &option.InboundTLSOptions{
-						Enabled:    true,
-						ServerName: sni,
-						Reality:    &realityOptions,
+						port = port + 1
+						realityOptions.Handshake.Server = sni
+						generatedInbound.Tag = generatedInbound.Tag + "-reality-" + sni
+						generatedInbound.VLESSOptions.ListenPort = uint16(port)
+						generatedInbound.VLESSOptions.TLS = &option.InboundTLSOptions{
+							Enabled:    true,
+							ServerName: sni,
+							Reality:    &realityOptions,
+						}
+						generatedInbounds = append(generatedInbounds, generatedInbound)
 					}
-					generatedInbounds = append(generatedInbounds, generatedInbound)
+
 				}
 			}
 		}
