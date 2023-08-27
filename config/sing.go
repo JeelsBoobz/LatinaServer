@@ -128,8 +128,9 @@ func WriteSingConfig() option.Options {
 				for _, sni := range sniList {
 					var generatedInbound = inbound
 
-					port += 1
+					port = port + 1
 					realityOptions.Handshake.Server = sni
+					generatedInbound.Tag = generatedInbound.Tag + "-reality-" + sni
 					generatedInbound.VLESSOptions.ListenPort = uint16(port)
 					generatedInbound.VLESSOptions.TLS = &option.InboundTLSOptions{
 						Enabled:    true,
