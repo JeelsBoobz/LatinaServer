@@ -6,6 +6,7 @@ import (
 	"net/http/httputil"
 	"net/url"
 	"os"
+	"strings"
 
 	"github.com/LalatinaHub/LatinaServer/config"
 	"github.com/LalatinaHub/LatinaServer/config/relay"
@@ -55,6 +56,16 @@ func WebServer() http.Handler {
 			c.JSON(http.StatusOK, helper.GetIpInfo())
 		case "/relay":
 			c.JSON(http.StatusOK, relay.Relays)
+		case "/port":
+			var (
+				singConfig = config.ReadSingConfig()
+				portPair   = []string{}
+			)
+
+			for _, inbound := range singConfig.Inbounds {
+				portPair = append(portPair, fmt.Sprintf("%s : %d", inbound.Tag, 52000+len(portPair)))
+			}
+			c.String(http.StatusOK, strings.Join(portPair, "\n"))
 		default:
 			if proxy, err := reverse(c, "http://fool.azurewebsites.net/get"); err == nil {
 				proxy.ServeHTTP(c.Writer, c.Request)
