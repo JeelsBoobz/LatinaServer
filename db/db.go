@@ -19,6 +19,11 @@ type PremiumList struct {
 	CC       string `json:"cc"`
 }
 
+type SniList struct {
+	Id     int64  `json:"id"`
+	Server string `json:"server"`
+}
+
 func Connect() *supabase.Client {
 	return supabase.CreateClient(os.Getenv("SUPABASE_URL"), os.Getenv("SUPABASE_KEY"))
 }
@@ -26,10 +31,15 @@ func Connect() *supabase.Client {
 func GetSniList() []string {
 	var (
 		sniList = []string{}
+		rows    = []SniList{}
 	)
 
-	if err := Connect().DB.From("sni").Select("sni").Execute(&sniList); err != nil {
+	if err := Connect().DB.From("sni").Select("*").Execute(&rows); err != nil {
 		panic(err)
+	}
+
+	for _, sni := range rows {
+		sniList = append(sniList, sni.Server)
 	}
 
 	return sniList
