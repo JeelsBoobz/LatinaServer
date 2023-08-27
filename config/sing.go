@@ -58,7 +58,7 @@ func WriteSingConfig() option.Options {
 			Stats: &option.V2RayStatsServiceOptions{
 				Enabled:   true,
 				Inbounds:  []string{},
-				Outbounds: []string{"direct"},
+				Outbounds: []string{},
 				Users:     []string{},
 			},
 		},
@@ -122,21 +122,21 @@ func WriteSingConfig() option.Options {
 				case C.V2RayTransportTypeWebsocket:
 					inbound.VLESSOptions.Transport.WebsocketOptions.Path = "/" + inbound.Type
 				}
-			} else {
-				if inbound.VLESSOptions.TLS == nil {
-					for _, sni := range sniList {
-						var generatedInbound = inbound
+			}
 
-						port += 1
-						realityOptions.Handshake.Server = sni
-						generatedInbound.VLESSOptions.ListenPort = uint16(port)
-						generatedInbound.VLESSOptions.TLS = &option.InboundTLSOptions{
-							Enabled:    true,
-							ServerName: sni,
-							Reality:    &realityOptions,
-						}
-						generatedInbounds = append(generatedInbounds, generatedInbound)
+			if inbound.Tag == C.TypeVLESS {
+				for _, sni := range sniList {
+					var generatedInbound = inbound
+
+					port += 1
+					realityOptions.Handshake.Server = sni
+					generatedInbound.VLESSOptions.ListenPort = uint16(port)
+					generatedInbound.VLESSOptions.TLS = &option.InboundTLSOptions{
+						Enabled:    true,
+						ServerName: sni,
+						Reality:    &realityOptions,
 					}
+					generatedInbounds = append(generatedInbounds, generatedInbound)
 				}
 			}
 		}
