@@ -14,6 +14,11 @@ import (
 	"github.com/sagernet/sing-box/option"
 )
 
+var (
+	RealityPublicKey  = "dSurRwxcBfR-kZGO6UEb8EeweJjE4HyVKpUJOGZSXQs"
+	RealityPrivateKey = "GHTprpUhfzbhJrtcAPrDKFJt6URah5VJN-39jFOOmVI"
+	RealityShortID    = option.Listable[string]{"193ad0acc0a872d8"}
+)
 var realityOptions = option.InboundRealityOptions{
 	Enabled: true,
 	Handshake: option.InboundRealityHandshakeOptions{
@@ -22,9 +27,8 @@ var realityOptions = option.InboundRealityOptions{
 			ServerPort: 443,
 		},
 	},
-	// PublicKey: "dSurRwxcBfR-kZGO6UEb8EeweJjE4HyVKpUJOGZSXQs",
-	PrivateKey: "GHTprpUhfzbhJrtcAPrDKFJt6URah5VJN-39jFOOmVI",
-	ShortID:    option.Listable[string]{"193ad0acc0a872d8"},
+	PrivateKey: RealityPrivateKey,
+	ShortID:    RealityShortID,
 }
 
 func ReadSingConfig() option.Options {

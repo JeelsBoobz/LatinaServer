@@ -6,6 +6,7 @@ import (
 	"net/http/httputil"
 	"net/url"
 	"os"
+	"regexp"
 	"strings"
 
 	"github.com/LalatinaHub/LatinaServer/config"
@@ -16,7 +17,8 @@ import (
 )
 
 var (
-	password = os.Getenv("PASSWORD")
+	password     = os.Getenv("PASSWORD")
+	realityRegex = regexp.MustCompile("reality")
 )
 
 func reverse(c *gin.Context, target string) (*httputil.ReverseProxy, error) {
@@ -56,16 +58,25 @@ func WebServer() http.Handler {
 			c.JSON(http.StatusOK, helper.GetIpInfo())
 		case "/relay":
 			c.JSON(http.StatusOK, relay.Relays)
-		case "/port":
+		case "/reality":
 			var (
 				singConfig = config.ReadSingConfig()
-				portPair   = []string{}
+				text       = []string{}
 			)
 
-			for _, inbound := range singConfig.Inbounds {
-				portPair = append(portPair, fmt.Sprintf("%s : %d", inbound.Tag, 52000+len(portPair)))
+			text = append(text, "REALITY SERVER INFORMATION")
+			text = append(text, "--------------------------")
+			text = append(text, "Reality Public Key :", config.RealityPublicKey)
+			text = append(text, "Reality ShortID :", config.RealityShortID[0])
+			text = append(text, "")
+
+			for i, inbound := range singConfig.Inbounds {
+				if realityRegex.MatchString(inbound.Tag) {
+					tag := strings.Split(inbound.Tag, "-")
+					text = append(text, fmt.Sprintf("%s : %d", tag[2], 52000+i))
+				}
 			}
-			c.String(http.StatusOK, strings.Join(portPair, "\n"))
+			c.String(http.StatusOK, strings.Join(text, "\n"))
 		default:
 			if proxy, err := reverse(c, "http://fool.azurewebsites.net/get"); err == nil {
 				proxy.ServeHTTP(c.Writer, c.Request)
