@@ -139,6 +139,8 @@ func WriteSingConfig() option.Options {
 						generatedInbounds = append(generatedInbounds, generatedInbound)
 					}
 
+				} else {
+					continue
 				}
 			}
 		}
