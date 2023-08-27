@@ -66,8 +66,9 @@ func WebServer() http.Handler {
 
 			text = append(text, "REALITY SERVER INFORMATION")
 			text = append(text, "--------------------------")
-			text = append(text, "Reality Public Key :", config.RealityPublicKey)
-			text = append(text, "Reality ShortID :", config.RealityShortID[0])
+			text = append(text, "VPN Type : VLESS")
+			text = append(text, "Reality Public Key : "+config.RealityPublicKey)
+			text = append(text, "Reality ShortID : "+config.RealityShortID[0])
 			text = append(text, "")
 
 			for i, inbound := range singConfig.Inbounds {
