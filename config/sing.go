@@ -14,6 +14,19 @@ import (
 	"github.com/sagernet/sing-box/option"
 )
 
+var realityOptions = option.InboundRealityOptions{
+	Enabled: true,
+	Handshake: option.InboundRealityHandshakeOptions{
+		ServerOptions: option.ServerOptions{
+			Server:     "",
+			ServerPort: 443,
+		},
+	},
+	// PublicKey: "dSurRwxcBfR-kZGO6UEb8EeweJjE4HyVKpUJOGZSXQs",
+	PrivateKey: "GHTprpUhfzbhJrtcAPrDKFJt6URah5VJN-39jFOOmVI",
+	ShortID:    option.Listable[string]{"193ad0acc0a872d8"},
+}
+
 func ReadSingConfig() option.Options {
 	body, err := os.ReadFile("/usr/local/etc/latinaserver/config.json")
 	if err != nil {
@@ -31,6 +44,7 @@ func ReadSingConfig() option.Options {
 
 func WriteSingConfig() option.Options {
 	premiumList := db.GetPremiumList()
+	sniList := db.GetSniList()
 	relayOutbounds := relay.GetRelayOutbounds()
 	options := ReadSingConfig()
 	options.Experimental = &option.ExperimentalOptions{
@@ -53,7 +67,8 @@ func WriteSingConfig() option.Options {
 	var inbounds []option.Inbound
 	for i, inbound := range options.Inbounds {
 		var (
-			port = 52000 + i
+			port              = 52000 + i
+			generatedInbounds = []option.Inbound{}
 		)
 
 		switch inbound.Type {
@@ -107,11 +122,27 @@ func WriteSingConfig() option.Options {
 				case C.V2RayTransportTypeWebsocket:
 					inbound.VLESSOptions.Transport.WebsocketOptions.Path = "/" + inbound.Type
 				}
+			} else {
+				if inbound.VLESSOptions.TLS == nil {
+					for _, sni := range sniList {
+						var generatedInbound = inbound
+
+						port += 1
+						realityOptions.Handshake.Server = sni
+						generatedInbound.VLESSOptions.ListenPort = uint16(port)
+						generatedInbound.VLESSOptions.TLS = &option.InboundTLSOptions{
+							Enabled:    true,
+							ServerName: sni,
+							Reality:    &realityOptions,
+						}
+						generatedInbounds = append(generatedInbounds, generatedInbound)
+					}
+				}
 			}
 		}
 
 		inbounds = append(inbounds, inbound)
-		options.Experimental.V2RayAPI.Stats.Inbounds = append(options.Experimental.V2RayAPI.Stats.Inbounds, inbound.Tag)
+		inbounds = append(inbounds, generatedInbounds...)
 	}
 
 	for _, list := range premiumList {
@@ -221,6 +252,15 @@ func WriteSingConfig() option.Options {
 				options.Route.Rules = append(options.Route.Rules, rule)
 			}
 		}
+	}
+
+	// List inbounds and outbounds tag to v2ray_api field
+	for _, inbound := range options.Inbounds {
+		options.Experimental.V2RayAPI.Stats.Inbounds = append(options.Experimental.V2RayAPI.Stats.Inbounds, inbound.Tag)
+	}
+
+	for _, outbound := range options.Outbounds {
+		options.Experimental.V2RayAPI.Stats.Outbounds = append(options.Experimental.V2RayAPI.Stats.Outbounds, outbound.Tag)
 	}
 
 	// Write new config

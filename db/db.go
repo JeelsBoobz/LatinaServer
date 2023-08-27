@@ -23,6 +23,18 @@ func Connect() *supabase.Client {
 	return supabase.CreateClient(os.Getenv("SUPABASE_URL"), os.Getenv("SUPABASE_KEY"))
 }
 
+func GetSniList() []string {
+	var (
+		sniList = []string{}
+	)
+
+	if err := Connect().DB.From("sni").Select("sni").Execute(&sniList); err != nil {
+		panic(err)
+	}
+
+	return sniList
+}
+
 func GetPremiumList() map[string][]PremiumList {
 	var (
 		premiumList = map[string][]PremiumList{}
