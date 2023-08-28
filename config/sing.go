@@ -19,17 +19,6 @@ var (
 	RealityPrivateKey = "GHTprpUhfzbhJrtcAPrDKFJt6URah5VJN-39jFOOmVI"
 	RealityShortID    = option.Listable[string]{"193ad0acc0a872d8"}
 )
-var realityOptions = option.InboundRealityOptions{
-	Enabled: true,
-	Handshake: option.InboundRealityHandshakeOptions{
-		ServerOptions: option.ServerOptions{
-			Server:     "",
-			ServerPort: 443,
-		},
-	},
-	PrivateKey: RealityPrivateKey,
-	ShortID:    RealityShortID,
-}
 
 func ReadSingConfig() option.Options {
 	body, err := os.ReadFile("/usr/local/etc/latinaserver/config.json")
@@ -132,13 +121,22 @@ func WriteSingConfig() option.Options {
 						var generatedInbound = inbound
 
 						port = port + 1
-						realityOptions.Handshake.Server = sni
 						generatedInbound.Tag = generatedInbound.Tag + "-reality-" + sni
 						generatedInbound.VLESSOptions.ListenPort = uint16(port)
 						generatedInbound.VLESSOptions.TLS = &option.InboundTLSOptions{
 							Enabled:    true,
 							ServerName: sni,
-							Reality:    &realityOptions,
+							Reality: &option.InboundRealityOptions{
+								Enabled: true,
+								Handshake: option.InboundRealityHandshakeOptions{
+									ServerOptions: option.ServerOptions{
+										Server:     sni,
+										ServerPort: 443,
+									},
+								},
+								PrivateKey: RealityPrivateKey,
+								ShortID:    RealityShortID,
+							},
 						}
 						generatedInbounds = append(generatedInbounds, generatedInbound)
 					}

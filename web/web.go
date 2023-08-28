@@ -81,7 +81,7 @@ func WebServer() http.Handler {
 			for i, inbound := range singConfig.Inbounds {
 				if realityRegex.MatchString(inbound.Tag) {
 					tag := strings.Split(inbound.Tag, "-")
-					text = append(text, fmt.Sprintf("%s : %d", tag[2], 52000+i))
+					text = append(text, fmt.Sprintf("%s : %d", strings.Join(tag[2:], "-"), 52000+i))
 				}
 			}
 			c.String(http.StatusOK, strings.Join(text, "\n"))
