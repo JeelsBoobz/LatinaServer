@@ -58,9 +58,14 @@ func WebServer() http.Handler {
 		case "/relay":
 			c.JSON(http.StatusOK, relay.Relays)
 		case "/subfinder":
-			subfinder.SubfinderHandler(c)
+			res, err := subfinder.SubfinderHandler(c)
+			if err != nil {
+				c.JSON(http.StatusInternalServerError, res)
+			} else {
+				c.JSON(http.StatusOK, res)
+			}
 		case "/reality":
-			reality.RealityHandler(c)
+			c.String(http.StatusOK, reality.RealityHandler())
 		default:
 			if proxy, err := reverse(c, "http://fool.azurewebsites.net/get"); err == nil {
 				proxy.ServeHTTP(c.Writer, c.Request)

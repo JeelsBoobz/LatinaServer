@@ -2,13 +2,11 @@ package reality
 
 import (
 	"fmt"
-	"net/http"
 	"os"
 	"regexp"
 	"strings"
 
 	"github.com/LalatinaHub/LatinaServer/config"
-	"github.com/gin-gonic/gin"
 )
 
 var (
@@ -16,7 +14,7 @@ var (
 	realityRegex = regexp.MustCompile("reality")
 )
 
-func RealityHandler(c *gin.Context) {
+func RealityHandler() string {
 	var (
 		singConfig = config.ReadSingConfig()
 		text       = []string{}
@@ -42,5 +40,5 @@ func RealityHandler(c *gin.Context) {
 		}
 	}
 
-	c.String(http.StatusOK, strings.Join(text, "\n"))
+	return strings.Join(text, "\n")
 }
