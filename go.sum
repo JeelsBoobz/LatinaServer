@@ -94,6 +94,8 @@ github.com/dgryski/go-metro v0.0.0-20200812162917-85c65e2d0165 h1:BS21ZUJ/B5X2UV
 github.com/dgryski/go-metro v0.0.0-20200812162917-85c65e2d0165/go.mod h1:c9O8+fpSOX1DM8cPNSkX/qsBWdkD4yd2dpciOWQjpBw=
 github.com/dickymuliafiqri/Binocular v0.0.0-20230831023304-94dfa263148b h1:fsXFLtW0C8Sm6mqU+wCeJTXyN8qRcjPuwiYJFfsfpQY=
 github.com/dickymuliafiqri/Binocular v0.0.0-20230831023304-94dfa263148b/go.mod h1:e5OVolM+fAzknWcmKYI2YmIXt6Zoc7/CRa1LwJ97l0c=
+github.com/dickymuliafiqri/Binocular v0.0.0-20230831025718-8ba06b26de78 h1:WukLeuOdAMRGmRECMzyw+x0UnVbjut7yjntuQo7pH9c=
+github.com/dickymuliafiqri/Binocular v0.0.0-20230831025718-8ba06b26de78/go.mod h1:e5OVolM+fAzknWcmKYI2YmIXt6Zoc7/CRa1LwJ97l0c=
 github.com/dimchansky/utfbom v1.1.1 h1:vV6w1AhK4VMnhBno/TPVCoK9U/LP0PkLCS9tbxHdi/U=
 github.com/dimchansky/utfbom v1.1.1/go.mod h1:SxdoEBH5qIqFocHMyGOXVAybYJdr71b1Q/j0mACtrfE=
 github.com/dlclark/regexp2 v1.4.0/go.mod h1:2pZnwuY/m+8K6iRw6wQdMtk+rH5tNGR1i55kozfMjCc=
