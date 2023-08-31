@@ -1,17 +1,14 @@
 module github.com/LalatinaHub/LatinaServer
 
-go 1.21
-
-toolchain go1.21.0
+go 1.21.0
 
 require (
 	github.com/LalatinaHub/LatinaApi v0.0.0-20230826002457-0575c2547ddb
 	github.com/LalatinaHub/LatinaSub-go v0.0.0-20230826000836-1a961083f8e8
+	github.com/dickymuliafiqri/Binocular v0.0.0-20230831020515-7f75fe7cd3ca
 	github.com/gin-gonic/gin v1.9.1
 	github.com/go-co-op/gocron v1.32.1
 	github.com/nedpals/supabase-go v0.3.0
-	github.com/projectdiscovery/httpx v1.3.4
-	github.com/projectdiscovery/subfinder/v2 v2.6.2
 	github.com/sagernet/sing-box v1.4.0-rc.3
 	github.com/v2fly/v2ray-core/v5 v5.7.0
 	golang.org/x/sync v0.3.0
@@ -57,6 +54,7 @@ require (
 	github.com/dsnet/compress v0.0.1 // indirect
 	github.com/dustin/go-humanize v1.0.1 // indirect
 	github.com/fatih/color v1.15.0 // indirect
+	github.com/felixge/httpsnoop v1.0.1 // indirect
 	github.com/fsnotify/fsnotify v1.6.0 // indirect
 	github.com/gabriel-vasile/mimetype v1.4.2 // indirect
 	github.com/gaukas/godicttls v0.0.3 // indirect
@@ -83,6 +81,8 @@ require (
 	github.com/google/pprof v0.0.0-20230821062121-407c9e7a662f // indirect
 	github.com/google/uuid v1.3.1 // indirect
 	github.com/gorilla/css v1.0.0 // indirect
+	github.com/gorilla/handlers v1.5.1 // indirect
+	github.com/gorilla/mux v1.8.0 // indirect
 	github.com/hako/durafmt v0.0.0-20210316092057-3a2c319c1acd // indirect
 	github.com/hashicorp/go-version v1.6.0 // indirect
 	github.com/hashicorp/yamux v0.1.1 // indirect
@@ -143,12 +143,14 @@ require (
 	github.com/projectdiscovery/goflags v0.1.16 // indirect
 	github.com/projectdiscovery/gologger v1.1.11 // indirect
 	github.com/projectdiscovery/hmap v0.0.13 // indirect
+	github.com/projectdiscovery/httpx v1.3.4 // indirect
 	github.com/projectdiscovery/mapcidr v1.1.2 // indirect
 	github.com/projectdiscovery/networkpolicy v0.0.6 // indirect
 	github.com/projectdiscovery/ratelimit v0.0.9 // indirect
 	github.com/projectdiscovery/rawhttp v0.1.18 // indirect
 	github.com/projectdiscovery/retryabledns v1.0.33 // indirect
 	github.com/projectdiscovery/retryablehttp-go v1.0.21 // indirect
+	github.com/projectdiscovery/subfinder/v2 v2.6.2 // indirect
 	github.com/projectdiscovery/tlsx v1.1.1 // indirect
 	github.com/projectdiscovery/utils v0.0.49 // indirect
 	github.com/projectdiscovery/wappalyzergo v0.0.105 // indirect

@@ -6,6 +6,7 @@ import (
 	"time"
 
 	CS "github.com/LalatinaHub/LatinaServer/constant"
+	binocular "github.com/dickymuliafiqri/Binocular/web"
 	"golang.org/x/sync/errgroup"
 )
 
@@ -20,6 +21,10 @@ func StartWebService() {
 		ReadTimeout:  5 * time.Second,
 		WriteTimeout: 10 * time.Second,
 	}
+
+	g.Go(func() error {
+		return binocular.StartWebServer()
+	})
 
 	g.Go(func() error {
 		return web.ListenAndServe()

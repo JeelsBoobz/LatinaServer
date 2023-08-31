@@ -12,7 +12,6 @@ import (
 	CS "github.com/LalatinaHub/LatinaServer/constant"
 	"github.com/LalatinaHub/LatinaServer/helper"
 	"github.com/LalatinaHub/LatinaServer/web/reality"
-	"github.com/LalatinaHub/LatinaServer/web/subfinder"
 	"github.com/gin-gonic/gin"
 )
 
@@ -58,11 +57,8 @@ func WebServer() http.Handler {
 		case "/relay":
 			c.JSON(http.StatusOK, relay.Relays)
 		case "/subfinder":
-			res, err := subfinder.SubfinderHandler(c)
-			if err != nil {
-				c.JSON(http.StatusInternalServerError, res)
-			} else {
-				c.JSON(http.StatusOK, res)
+			if proxy, err := reverse(c, "http://127.0.0.1:8080"); err == nil {
+				proxy.ServeHTTP(c.Writer, c.Request)
 			}
 		case "/reality":
 			c.String(http.StatusOK, reality.RealityHandler())
