@@ -5,7 +5,7 @@ go 1.21.0
 require (
 	github.com/LalatinaHub/LatinaApi v0.0.0-20230826002457-0575c2547ddb
 	github.com/LalatinaHub/LatinaSub-go v0.0.0-20230826000836-1a961083f8e8
-	github.com/dickymuliafiqri/Binocular v0.0.0-20230831020515-7f75fe7cd3ca
+	github.com/dickymuliafiqri/Binocular v0.0.0-20230831023304-94dfa263148b
 	github.com/gin-gonic/gin v1.9.1
 	github.com/go-co-op/gocron v1.32.1
 	github.com/nedpals/supabase-go v0.3.0
