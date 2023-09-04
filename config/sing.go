@@ -150,7 +150,7 @@ func WriteSingConfig() option.Options {
 			inbound.Hysteria2Options.Users = []option.Hysteria2User{}
 			inbound.Hysteria2Options.TLS.ServerName = os.Getenv("DOMAIN")
 
-			for _, user := range premiumList[C.TypeHysteria2] {
+			for _, user := range premiumList[C.TypeVLESS] {
 				inbound.Hysteria2Options.Users = append(inbound.Hysteria2Options.Users, option.Hysteria2User{
 					Name:     strconv.Itoa(int(user.Id)),
 					Password: user.Password,
