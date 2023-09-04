@@ -56,10 +56,6 @@ func WebServer() http.Handler {
 			c.JSON(http.StatusOK, helper.GetIpInfo())
 		case "/relay":
 			c.JSON(http.StatusOK, relay.Relays)
-		case "/subfinder":
-			if proxy, err := reverse(c, "http://127.0.0.1:8080"); err == nil {
-				proxy.ServeHTTP(c.Writer, c.Request)
-			}
 		case "/reality":
 			c.String(http.StatusOK, reality.RealityHandler())
 		default:

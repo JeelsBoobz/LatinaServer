@@ -17,7 +17,7 @@ var password = func() string {
 	return "reload"
 }
 
-var endpoints = []string{password(), "info", "relay", "get", "reality", "subfinder"}
+var endpoints = []string{password(), "info", "relay", "get", "reality"}
 var locationTemplace = []string{
 	`		location /PATH {`,
 	`			proxy_redirect off;`,

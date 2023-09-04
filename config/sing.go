@@ -145,6 +145,16 @@ func WriteSingConfig() option.Options {
 					continue
 				}
 			}
+		case C.TypeHysteria2:
+			inbound.Hysteria2Options.ListenPort = uint16(port)
+			inbound.Hysteria2Options.Users = []option.Hysteria2User{}
+
+			for _, user := range premiumList[C.TypeHysteria2] {
+				inbound.Hysteria2Options.Users = append(inbound.Hysteria2Options.Users, option.Hysteria2User{
+					Name:     strconv.Itoa(int(user.Id)),
+					Password: user.Password,
+				})
+			}
 		}
 
 		inbounds = append(inbounds, inbound)

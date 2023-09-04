@@ -16,10 +16,26 @@
   },
   "inbounds": [
     {
+      "type": "hysteria2",
+      "tag": "hysteria2",
+      "listen": "::",
+      "listen_port": 52000,
+      "obfs": {
+        "type": "salamander",
+        "password": "cry_of_banshee"
+      },
+      "ignore_client_bandwidth": true,
+      "tls": {
+        "enabled": true,
+        "certificate_path": "/usr/local/cert/cert.pem",
+        "key_path": "/usr/local/cert/key.pem"
+      }
+    },
+    {
       "type": "trojan",
       "tag": "trojan",
       "listen": "::",
-      "listen_port": 52000,
+      "listen_port": 52001,
       "tcp_fast_open": true,
       "udp_fragment": true
     },
@@ -27,7 +43,7 @@
       "type": "trojan",
       "tag": "trojan-ws",
       "listen": "::",
-      "listen_port": 52001,
+      "listen_port": 52002,
       "tcp_fast_open": true,
       "udp_fragment": true,
       "transport": {
@@ -59,7 +75,7 @@
       "type": "vless",
       "tag": "vless",
       "listen": "::",
-      "listen_port": 52006,
+      "listen_port": 52005,
       "tcp_fast_open": true,
       "udp_fragment": true
     },
@@ -67,7 +83,7 @@
       "type": "vless",
       "tag": "vless-ws",
       "listen": "::",
-      "listen_port": 52007,
+      "listen_port": 52006,
       "tcp_fast_open": true,
       "udp_fragment": true,
       "transport": {
