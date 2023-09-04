@@ -148,6 +148,7 @@ func WriteSingConfig() option.Options {
 		case C.TypeHysteria2:
 			inbound.Hysteria2Options.ListenPort = uint16(port)
 			inbound.Hysteria2Options.Users = []option.Hysteria2User{}
+			inbound.Hysteria2Options.TLS.ServerName = os.Getenv("DOMAIN")
 
 			for _, user := range premiumList[C.TypeHysteria2] {
 				inbound.Hysteria2Options.Users = append(inbound.Hysteria2Options.Users, option.Hysteria2User{
