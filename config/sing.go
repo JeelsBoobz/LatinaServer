@@ -166,9 +166,9 @@ func WriteSingConfig() option.Options {
 					generatedInbound.VLESSOptions.TLS = tlsOptions
 				}
 
-				// Ignore unsupported protocol type
+				// Ignore some protocol
 				switch generatedInbound.Type {
-				case C.TypeHysteria2:
+				case C.TypeHysteria2, C.TypeVMess:
 				default:
 					inbounds = append(inbounds, generatedInbound)
 				}
