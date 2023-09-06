@@ -33,10 +33,9 @@ func RealityHandler() string {
 	text = append(text, "SNI AND PORT BINDING")
 	text = append(text, "--------------------")
 
-	for i, inbound := range singConfig.Inbounds {
+	for _, inbound := range singConfig.Inbounds {
 		if realityRegex.MatchString(inbound.Tag) {
-			tag := strings.Split(inbound.Tag, "-")
-			text = append(text, fmt.Sprintf("%s : %d", strings.Join(tag[2:], "-"), 52000+i))
+			text = append(text, inbound.Tag)
 		}
 	}
 

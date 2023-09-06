@@ -16,22 +16,6 @@
   },
   "inbounds": [
     {
-      "type": "hysteria2",
-      "tag": "hysteria2",
-      "listen": "::",
-      "listen_port": 52000,
-      "obfs": {
-        "type": "salamander",
-        "password": "cry_of_banshee"
-      },
-      "ignore_client_bandwidth": true,
-      "tls": {
-        "enabled": true,
-        "certificate_path": "/usr/local/cert/cert.pem",
-        "key_path": "/usr/local/cert/key.pem"
-      }
-    },
-    {
       "type": "trojan",
       "tag": "trojan",
       "listen": "::",
@@ -89,6 +73,22 @@
       "transport": {
         "type": "ws",
         "path": "/vless"
+      }
+    },
+    {
+      "type": "hysteria2",
+      "tag": "hysteria2",
+      "listen": "::",
+      "listen_port": 52007,
+      "obfs": {
+        "type": "salamander",
+        "password": "cry_of_banshee"
+      },
+      "ignore_client_bandwidth": true,
+      "tls": {
+        "enabled": true,
+        "certificate_path": "/usr/local/cert/cert.pem",
+        "key_path": "/usr/local/cert/key.pem"
       }
     }
   ],

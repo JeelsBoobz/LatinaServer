@@ -60,8 +60,7 @@ func WriteSingConfig() option.Options {
 	var inbounds []option.Inbound
 	for _, inbound := range options.Inbounds {
 		var (
-			port              = 52000 + len(inbounds)
-			generatedInbounds = []option.Inbound{}
+			port = 52000 + len(inbounds)
 		)
 
 		switch inbound.Type {
@@ -115,35 +114,6 @@ func WriteSingConfig() option.Options {
 				case C.V2RayTransportTypeWebsocket:
 					inbound.VLESSOptions.Transport.WebsocketOptions.Path = "/" + inbound.Type
 				}
-			} else {
-				if inbound.VLESSOptions.TLS == nil {
-					for _, sni := range sniList {
-						var generatedInbound = inbound
-
-						port = port + 1
-						generatedInbound.Tag = generatedInbound.Tag + "-reality-" + sni
-						generatedInbound.VLESSOptions.ListenPort = uint16(port)
-						generatedInbound.VLESSOptions.TLS = &option.InboundTLSOptions{
-							Enabled:    true,
-							ServerName: sni,
-							Reality: &option.InboundRealityOptions{
-								Enabled: true,
-								Handshake: option.InboundRealityHandshakeOptions{
-									ServerOptions: option.ServerOptions{
-										Server:     sni,
-										ServerPort: 443,
-									},
-								},
-								PrivateKey: RealityPrivateKey,
-								ShortID:    RealityShortID,
-							},
-						}
-						generatedInbounds = append(generatedInbounds, generatedInbound)
-					}
-
-				} else {
-					continue
-				}
 			}
 		case C.TypeHysteria2:
 			inbound.Hysteria2Options.ListenPort = uint16(port)
@@ -159,7 +129,46 @@ func WriteSingConfig() option.Options {
 		}
 
 		inbounds = append(inbounds, inbound)
-		inbounds = append(inbounds, generatedInbounds...)
+	}
+
+	// Generate reality inbounds
+	for i, inbound := range inbounds {
+		if !strings.Contains(inbound.Tag, "-") {
+			for x, sni := range sniList {
+				port := 53000 + (i * 1000) + x
+				tlsOptions := &option.InboundTLSOptions{
+					Enabled:    true,
+					ServerName: sni,
+					Reality: &option.InboundRealityOptions{
+						Enabled: true,
+						Handshake: option.InboundRealityHandshakeOptions{
+							ServerOptions: option.ServerOptions{
+								Server:     sni,
+								ServerPort: 443,
+							},
+						},
+						PrivateKey: RealityPrivateKey,
+						ShortID:    RealityShortID,
+					},
+				}
+
+				generatedInbound := inbound
+				generatedInbound.Tag = generatedInbound.Type + "-reality-" + sni + " : " + strconv.Itoa(port)
+				switch inbound.Type {
+				case C.TypeVLESS:
+					generatedInbound.VLESSOptions.ListenPort = uint16(port)
+					generatedInbound.VLESSOptions.TLS = tlsOptions
+				case C.TypeTrojan:
+					generatedInbound.TrojanOptions.ListenPort = uint16(port)
+					generatedInbound.TrojanOptions.TLS = tlsOptions
+				case C.TypeHysteria2:
+					generatedInbound.Hysteria2Options.ListenPort = uint16(port)
+					generatedInbound.Hysteria2Options.TLS = tlsOptions
+				}
+
+				inbounds = append(inbounds, generatedInbound)
+			}
+		}
 	}
 
 	for _, list := range premiumList {
