@@ -63,7 +63,7 @@ func WriteSingConfig() option.Options {
 			port = 52000 + len(inbounds)
 		)
 
-		if strings.Contains(inbound.Tag, "-") {
+		if strings.Contains(inbound.Tag, "reality") {
 			continue
 		}
 
