@@ -164,12 +164,15 @@ func WriteSingConfig() option.Options {
 				case C.TypeVLESS:
 					generatedInbound.VLESSOptions.ListenPort = uint16(port)
 					generatedInbound.VLESSOptions.TLS = tlsOptions
-				case C.TypeHysteria2:
-					generatedInbound.Hysteria2Options.ListenPort = uint16(port)
-					generatedInbound.Hysteria2Options.TLS = tlsOptions
 				}
 
-				inbounds = append(inbounds, generatedInbound)
+				// Ignore unsupported protocol type
+				switch generatedInbound.Type {
+				case C.TypeHysteria2:
+				default:
+					inbounds = append(inbounds, generatedInbound)
+				}
+
 			}
 		}
 	}
