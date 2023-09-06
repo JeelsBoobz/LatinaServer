@@ -63,6 +63,10 @@ func WriteSingConfig() option.Options {
 			port = 52000 + len(inbounds)
 		)
 
+		if strings.Contains(inbound.Tag, "-") {
+			continue
+		}
+
 		switch inbound.Type {
 		case C.TypeTrojan:
 			inbound.TrojanOptions.ListenPort = uint16(port)
