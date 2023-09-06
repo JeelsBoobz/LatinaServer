@@ -155,12 +155,15 @@ func WriteSingConfig() option.Options {
 				generatedInbound := inbound
 				generatedInbound.Tag = generatedInbound.Type + "-reality-" + sni + " : " + strconv.Itoa(port)
 				switch inbound.Type {
-				case C.TypeVLESS:
-					generatedInbound.VLESSOptions.ListenPort = uint16(port)
-					generatedInbound.VLESSOptions.TLS = tlsOptions
 				case C.TypeTrojan:
 					generatedInbound.TrojanOptions.ListenPort = uint16(port)
 					generatedInbound.TrojanOptions.TLS = tlsOptions
+				case C.TypeVMess:
+					generatedInbound.VMessOptions.ListenPort = uint16(port)
+					generatedInbound.VMessOptions.TLS = tlsOptions
+				case C.TypeVLESS:
+					generatedInbound.VLESSOptions.ListenPort = uint16(port)
+					generatedInbound.VLESSOptions.TLS = tlsOptions
 				case C.TypeHysteria2:
 					generatedInbound.Hysteria2Options.ListenPort = uint16(port)
 					generatedInbound.Hysteria2Options.TLS = tlsOptions
